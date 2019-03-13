@@ -1,0 +1,22 @@
+<?php /** @var \Project\Installation $inst */ ?>
+<div class="console-description">
+    Entered PHP code will be executed in the application root
+</div>
+
+<?php
+$options = ['inst' => $inst];
+if ($inst->webServer->type === 'docker') {
+    $options['toolbar'] = 'toolbar/docker';
+    $options['nameFilter'] = 'php';
+}
+?>
+
+<?= template('consoleTextarea', $options) ?>
+
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'runPhp';
+        setValue(<?= json_encode($inst->vars->get('lastPhpCode')) ?>);
+        setMode('text/x-php');
+    }
+</script>

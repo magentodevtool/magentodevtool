@@ -1,0 +1,28 @@
+<?php foreach ($results as $result) { ?>
+    <pre>--------------<?= "\n" . html2text($result['query']) . "\n" ?>--------------</pre>
+    <?php if (isset($result['error'])) { ?>
+        <span style="color: red"><?= html2text($result['error']) ?></span>
+    <?php } elseif (isset($result['rows'])) { ?>
+        <?php if (!count($result['rows'])) { ?>
+            <pre>Empty set</pre>
+        <?php } else { ?>
+            <table border="1">
+                <tr>
+                    <?php foreach (array_keys($result['rows'][0]) as $columnName) { ?>
+                        <th><?= html2text($columnName) ?></th>
+                    <?php } ?>
+                </tr>
+                <?php foreach ($result['rows'] as $row) { ?>
+                    <tr>
+                        <?php foreach ($row as $value) { ?>
+                            <td><?= html2text($value) ?></td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </table>
+            <?= count($result['rows']) ?> rows in set
+        <?php } ?>
+    <?php } else { ?>
+        <pre>Affected rows: <?= html2text($result['affectedRows']) ?></pre>
+    <?php } ?>
+<?php } ?>

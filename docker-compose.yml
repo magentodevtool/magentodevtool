@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+
+  devtool:
+#    build: .docker-images/devtool
+    image: yourcompany/devtool:latest
+    volumes:
+      - .:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/.ssh:$HOME/.ssh:ro
+      - $HOME/.devtool:$HOME/.devtool
+      - $HOME/.composer:$HOME/.composer
+      - $HOME/.magento-cloud:$HOME/.magento-cloud
+      - $HOME/.gitconfig:$HOME/.gitconfig:ro
+      - $WORKSPACE:$WORKSPACE
+    environment:
+      - PORT=80
+      - DEVTOOL_USER=$USER
+      - APACHE_RUN_USER=$USER
+      - DEVTOOL_UID=$DEVTOOL_UID
+      - DOCKER_GID=$DOCKER_GID
+      - DEVTOOL_HOME=$HOME
+#      - WITH_XDEBUG=1
+    ports:
+      - 83:80
+    networks:
+      - devtool
+
+networks:
+  devtool:
+    external:
+      name: devtool

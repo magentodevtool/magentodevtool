@@ -1,0 +1,65 @@
+<?php
+
+$databases = $inst->getDatabases();
+$currentCred = $inst->getDbCredentials();
+$currentDatabase = $currentCred->dbname;
+\Mysql::server($currentCred); // connect
+
+?>
+
+<div id="databasesList">
+    Filter: <input type="text" value="<?= html2text($inst->getDbSimpleFilter()) ?>"
+                   style="margin-top: -5px; width: 350px;" onkeyup="dbFilterChange(this, event)"/>
+    <br><br>
+    <table class="list">
+        <?php if (count($databases)) { ?>
+            <?php
+            foreach ($databases as $database) {
+
+                if (in_array($database, array('information_schema', 'mysql', 'performance_schema'))) {
+                    continue;
+                }
+
+                $dbHtml = html2text($database);
+                $dbOnClickArg = var2htmlValue($database);
+
+                $isCurrent = $database === $currentDatabase;
+                $isValid = \Mysql::db($database) && \Mysql\Db::isMagento();
+                $isEmpty = \Mysql\Db::tablesCount() == 0;
+
+                echo '<tr><td>';
+                echo '<span style="color: green; ' . (!$isCurrent ? 'visibility: hidden' : '') . '"><b>*</b> </span>';
+                if ($isCurrent) {
+                    $dbHtml = "<span style=\"font-weight: bold; color: green\">$dbHtml</span>";
+                } elseif ($isValid) {
+                    $dbHtml = '<a href="#" onclick="switchDatabasePopup(' . $dbOnClickArg . '); return false;">' . $dbHtml . '</a>';
+                } else {
+                    $dbHtml = "<span style=\"color: grey\">$dbHtml</span>";
+                }
+                echo $dbHtml;
+                echo '</td><td>';
+                if (!$isCurrent) {
+                    echo '<button onclick="dropDatabase(' . $dbOnClickArg . ', ' . (int)$isValid . '); return false;">Drop</button>';
+                }
+                if ($isEmpty) {
+                    echo '<button onclick="databaseImport(' . $dbOnClickArg . '); return false;">Import</button>';
+                }
+                echo '</td></tr>';
+
+            }
+            ?>
+        <?php } else { ?>
+            <br>No databases
+        <?php } ?>
+    </table>
+    <br>Add: <input id="newDbName" type="text" value="<?= $inst->getDefaultDbName() ?>"
+                    style="margin-top: -5px; width: 350px;" onkeyup="createDatabase(this, event)"/>
+</div>
+
+<div id="databasesList.import" style="display:none">
+    <br>
+
+    <div id="databasesList.import.title"></div>
+    <br>
+    <?= $inst->form('db/import/dialog') ?>
+</div>

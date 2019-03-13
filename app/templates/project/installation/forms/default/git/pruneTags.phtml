@@ -1,0 +1,19 @@
+<?php
+
+$tagsToPrune = $inst->git->getTagsToPrune();
+
+if (!count($tagsToPrune)) {
+    echo "Nothing to prune";
+    return;
+}
+
+?>
+
+Following tags doesn't exist on origin:
+<ul>
+    <?php foreach ($tagsToPrune as $tagToPrune) { ?>
+        <li style="color:gray"><?= html2text($tagToPrune['name']) ?></li>
+    <?php } ?>
+</ul>
+
+<button onclick="inst.pruneTags(<?= var2htmlValue($tagsToPrune) ?>)">Remove All</button>

@@ -1,0 +1,12 @@
+<div class="tabs" id="tabsContainer">
+    <div class="tab-left">&nbsp;</div>
+    <?php foreach ($tabs as $tabId => $tabTitle) { ?>
+        <div class="tab">
+            <a href="#" id="tab.<?= $tabId ?>"
+               onclick="inst.tabClick(<?= var2htmlValue($tabId) ?>); return false;"><?= html2text($tabTitle) ?></a>
+        </div>
+    <?php } ?>
+    <div class="tab-right">&nbsp;</div>
+</div>
+<div class="tabs-after"></div>
+<div id="tabContent"></div>

@@ -1,0 +1,25 @@
+<script type="application/javascript" src="/app/js/projects.js?v=2"></script>
+
+<?php if (!Config::getData()->workspace) : ?>
+    <?= template('message/fixWorkspaceVariable') ?>
+<?php endif; ?>
+
+<?= template('devtool/status') ?>
+<table>
+    <tr>
+        <td>
+            <a href="/?view=timeEstimation">Time Estimation</a>
+        </td>
+    </tr>
+</table>
+<?= template('projects', array('list' => Projects\Local::getList(), 'source' => 'local')) ?>
+<?= template('projects/remote') ?>
+<br>
+<?= template('configuration') ?>
+<br>
+<br>
+<a href="/?view=sqlite">SQLite console to Devtool database</a>
+<br>
+<a href="/?view=massAccessCheck">Mass access check</a>
+<br>
+<a href="/?view=projects/info">Projects info</a>

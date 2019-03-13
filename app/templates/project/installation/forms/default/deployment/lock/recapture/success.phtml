@@ -1,0 +1,5 @@
+<script type="application/javascript">
+    deployment.lockHash = <?= json_encode($hashes) ?>;
+    deployment.updateLock();
+    deployment.retry();
+</script>

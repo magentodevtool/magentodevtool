@@ -1,0 +1,15 @@
+<div id="customMainDomainForm"
+     style="padding-left: 25px;">
+    main domain:
+    <input id="customMainDomain" value="<?= html2text($inst->domain) ?>" style="width: 250px"/>
+    <button
+            style="width: 40px"
+            onclick="inst.setCustomMainDomain()"
+    >Set
+    </button>
+    <?php if ($inst->webServer->type === 'docker') { ?>
+        <div style="color: grey">
+            Note: domain for Docker should end with ".local.dev"
+        </div>
+    <?php } ?>
+</div>

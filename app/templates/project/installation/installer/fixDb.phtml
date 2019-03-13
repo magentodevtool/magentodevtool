@@ -1,0 +1,3 @@
+<?php $cred = $inst->getDbCredentials() ?>
+Can't create database "<?= html2text($cred->dbname) ?>", please create it manually
+<?= $inst->getContinueButton() ?>

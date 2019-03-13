@@ -1,0 +1,13 @@
+<?php if (isset($applyChangesWarnings) && count($applyChangesWarnings)) { ?>
+    <span class="warning"><b>Changes were applied with warnings:</b></span><br>
+    <span style="white-space: pre;"><?= html2text(implode("\n", $applyChangesWarnings)) ?></span>
+<?php } ?>
+
+<?php if (isset($scssCompilationException) && $scssCompilationException) { ?>
+    <div class="warning" style="font-weight: bold">SCSS compilation failed:</div>
+    <div class="warning"><?= html2text($scssCompilationException->getMessage()) ?></div>
+<?php } ?>
+
+<?php if (isset($flushCaches)) { ?>
+    <?= $inst->form('flushCaches/result', array('result' => $flushCaches)) ?>
+<?php } ?>

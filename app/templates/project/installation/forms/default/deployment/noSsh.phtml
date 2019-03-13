@@ -1,0 +1,134 @@
+<?php if (!isset($inst->noSshDeployment->mail->to) || !isset($inst->noSshDeployment->mail->cc)) { ?>
+    <span class="error">
+        You need to configure noSshDeployment.mail.to and noSshDeployment.mail.cc in projects.json
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php if (!$buildInst = $inst->deployment->getBuildInst()) { ?>
+    <span class="error">
+        "<?= html2text($inst->deployment->getBuildInstName()) ?>" environment not found
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php if (!$deploymentType = $buildInst->deployment->getType()) { ?>
+    <span class="error">
+        Can't determine deployment type on "<?= html2text($inst->deployment->getBuildInstName()) ?>"
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php
+$deploymentRemoteBranch = $deploymentRemoteTag = false;
+if ($deploymentType === 'staging') {
+    $deploymentRemoteBranch = $buildInst->git->getCurrentBranch();
+} else {
+    $deploymentRemoteTags = $buildInst->git->getCurrentTags();
+    if (is_array($deploymentRemoteTags)) {
+        $deploymentRemoteTag = reset($deploymentRemoteTags);
+    }
+}
+?>
+<?php if (($deploymentType === 'production') && !$deploymentRemoteTag) { ?>
+    <span class="error">
+        "<?= html2text($inst->deployment->getBuildInstName()) ?>" must be on a tag
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php
+$envName = $deploymentType === 'staging' ? 'Beta' : 'Live';
+
+$reflog = explode("\n", trim($buildInst->exec('git reflog')));
+$from = strtok($reflog[1], ' ');
+$to = strtok($reflog[0], ' ');
+
+$addlParams = compact('deploymentRemoteBranch', 'deploymentRemoteTag', 'envName', 'deploymentType', 'from', 'to');
+$getInstructionHref = function () use ($inst, $addlParams) {
+    $values = [
+        'view' => 'installation/deployment/noSsh',
+        'source' => $inst->source,
+        'project' => $inst->project->name,
+        'name' => $inst->name,
+        'params' => base64_encode(json_encode($addlParams)),
+    ];
+    $pairs = [];
+    foreach ($values as $key => $value) {
+        $pairs[] = "$key=" . urlencode($value);
+    }
+    return CENTR_HOST . "?" . implode('&', $pairs);
+}
+?>
+<br>
+<span style="font-size: 115%">
+    Deployment procedure without SSH access to the environment
+</span>
+
+<ol id="noSshForm">
+    <li>
+        Perform usual deployment to "<?= html2text($inst->deployment->getBuildInstName()) ?>" environment with the
+        following nuances:
+        <ul>
+            <li>If previous deployment was done skipping build environment (temporary SSH access was granted)<br>
+                then you need to sync build environments: switch to the newest tag or sync Beta branch (git reset --hard
+                origin/Beta).<br>
+                Otherwise you will see extra depins in the <a href="<?= $getInstructionHref() ?>">instruction</a> as
+                they are collected automatically based on last
+                and previous state according to "git reflog" on build environment.
+            </li>
+            <li>Make sure there is no unfinished deployment instructions before deployment</li>
+            <li>Perform depins and mark them as done</li>
+        </ul>
+    </li>
+    <li style="margin-top: 15px">
+        Refresh "Deployment" tab
+        <ul>
+            <li>Just click on "Deployment" tab to correct
+                <?= $deploymentType === 'production' ? 'tag name and' : '' ?>
+                <a href="<?= $getInstructionHref() ?>">instruction</a> link
+            </li>
+        </ul>
+    </li>
+    <li style="margin-top: 15px">
+        Make sure <a href="<?= $getInstructionHref() ?>">instruction</a> for sysadmins is working and contains all
+        the depins.
+    </li>
+    <li style="margin-top: 15px">
+        Send mail to finish the deployment<br>
+        <table>
+            <tr>
+                <td style="font-weight: bold; vertical-align: top">To:</td>
+                <td class="emails-list">
+                    <?= html2text($inst->noSshDeployment->mail->to) ?>
+                    <?php if (!empty($inst->noSshDeployment->mail->toReserve)) { ?>
+                        <br>
+                        <span style="color: gray">
+                            Reserve: <?= html2text($inst->noSshDeployment->mail->toReserve) ?>
+                        </span>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">Cc:</td>
+                <td class="emails-list"><?= html2text($inst->noSshDeployment->mail->cc) ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">Subject:</td>
+                <td>
+                    Deployment to <?= html2text($inst->project->name) ?> / <?= html2text($inst->name) ?>
+                    <?php if ($deploymentType === 'production') { ?>
+                        (tag <?= $deploymentRemoteTag ?>)
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <br>
+                    Hi,<br>
+                    <br>
+                    Please finish the deployment by
+                    <a href="<?= $getInstructionHref() ?>">instruction</a>.<br>
+                    <br>
+                    QA, when sysadmin's part is done, please perform smoke test and reply.
+                </td>
+            </tr>
+        </table>
+    </li>
+</ol>

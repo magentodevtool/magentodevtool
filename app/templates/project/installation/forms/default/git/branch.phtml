@@ -1,0 +1,160 @@
+<?= $inst->form('git/fetch') ?>
+<?php
+
+$branches = $inst->git->getRemoteBranches();
+$currentBranch = $inst->git->getCurrentBranch();
+
+if ($currentBranch && isset($branches[$currentBranch])) {
+    $currentBranchBehindCommits = $inst->git->getBranchBehindCommits($currentBranch);
+    $currentBranchAheadCommits = $inst->git->getBranchAheadCommits($currentBranch);
+    $currentBranchColor = count($currentBranchBehindCommits) ? '#aa0000' : 'green';
+}
+
+?>
+
+<div id="branchForm">
+    <table class="list">
+        <tr>
+            <th style="color: #ccc; font-weight: normal; border-right: 1px solid #ccc; padding-right:3px; text-align: right">
+                ahead
+            </th>
+            <th style="color: #ccc; font-weight: normal; padding-left:3px;">behind</th>
+            <th style="border:0"></th>
+        </tr>
+        <?php foreach ($branches as $branch) { ?>
+            <tr class="branch-line">
+                <td style="text-align:right; padding-right:3px; border-right: 1px solid #ccc; cursor: default">
+                    <?php if (isset($branch['ahead']['Alpha'])) { ?>
+                        <span style="color: <?= count($branch['ahead']['Alpha']) == 0 ? '#ccc' : 'green' ?>"
+                            <?php if (count($branch['ahead']['Alpha']) > 0): ?>
+                                title="Use right click for details"
+                                oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $branch['ahead']['Alpha']))) ?>); return false;"
+                            <?php endif; ?>>
+						<?= count($branch['ahead']['Alpha']) ?>,
+					</span>
+                    <?php } ?>
+                    <?php if (isset($branch['ahead']['Beta'])) { ?>
+                        <span style="color: <?= count($branch['ahead']['Beta']) == 0 ? '#ccc' : 'green' ?>"
+                            <?php if (count($branch['ahead']['Beta']) > 0): ?>
+                                title="Use right click for details"
+                                oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $branch['ahead']['Beta']))) ?>); return false;"
+                            <?php endif; ?>>
+						<?= count($branch['ahead']['Beta']) ?>,
+					</span>
+                    <?php } ?>
+                    <span style="color: <?= count($branch['ahead']['master']) == 0 ? '#ccc' : 'green' ?>"
+                        <?php if (count($branch['ahead']['master']) > 0): ?>
+                            title="Use right click for details"
+                            oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $branch['ahead']['master']))) ?>); return false;"
+                        <?php endif; ?>>
+					<?= count($branch['ahead']['master']) ?>
+				</span>
+                </td>
+                <td style="padding-left:3px; padding-right: 0; cursor: default">
+				<span style="color: <?= count($branch['behind']['master']) == 0 ? '#ccc' : '#aa0000' ?>"
+                    <?php if (count($branch['behind']['master']) > 0): ?>
+                        title="Use right click for details"
+                        oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $branch['behind']['master']))) ?>); return false;"
+                    <?php endif; ?>>
+					<?= count($branch['behind']['master']) ?>
+				</span>
+                </td>
+                <td style="padding-left: 20px">
+                    <?php if ($branch['name'] === $currentBranch) { ?>
+                        <span style="color: <?= $currentBranchColor ?>"><b>*</b> </span>
+                        <span style="font-weight: bold; color: <?= $currentBranchColor ?>">
+						<?= html2text($branch['name']) ?>
+					</span>
+                    <?php } else { ?>
+                        <span style="visibility:hidden"><b>*</b> </span>
+                        <a href="#"
+                           onclick="inst.gitCheckoutPopup('branch', <?= var2htmlValue($branch['name']) ?>); return false;"
+                            >
+                            <?= html2text($branch['name']) ?>
+                        </a>
+                    <?php } ?>
+                    <?php if ($issueLink = Projects::getIssueLink($branch['name'])) { ?>
+                        <a href="<?= html2text($issueLink) ?>">
+                            <img style="padding-left: 5px; padding-right: 5px" src="/app/skin/link.png"/>
+                        </a>
+                    <?php } ?>
+                </td>
+                <td style="padding-right: 10px">
+                    <?php if ($currentBranch === $branch['name']) { ?>
+                        <?php if (count($currentBranchBehindCommits)) { ?>
+                            <button onclick="inst.pullBranch()"
+                                    oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $currentBranchBehindCommits))) ?>); return false;"
+                                    title="<?= html2text(count($currentBranchBehindCommits) . " commits \n use right click for details") ?>"
+                                    class="pull"></button>
+                        <?php } else { ?>
+                            <button disabled="disabled" class="pull" title="Pull"></button>
+                        <?php } ?>
+                        <?php if (count($currentBranchAheadCommits) && !count($currentBranchBehindCommits)) { ?>
+                            <button class="push" onclick="inst.pushBranchPopup(<?= var2htmlValue($branch['name']); ?>);"
+                                    oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $currentBranchAheadCommits))) ?>); return false;"
+                                    title="<?= html2text(count($currentBranchAheadCommits) . " commits \n use right click for details") ?>"></button>
+                        <?php } else { ?>
+                            <button class="push" disabled="disabled" title="Push"></button>
+                        <?php } ?>
+                        <?php if (count($branch['behind']['master']) && ($inst->type === 'local') && !count($currentBranchBehindCommits) && !count($currentBranchAheadCommits)) { ?>
+                            <button
+                                onclick="inst.updateBranch(<?= var2htmlValue($currentBranch) ?>)"
+                                oncontextmenu="inst.popupHtml(<?= var2htmlValue($inst->form('git/commitsHint', array('commits' => $branch['behind']['master']))) ?>); return false;"
+                                title="<?= "Update from origin/master " . count($branch['behind']['master']) . " commits \n  Use right click for details" ?>"
+                                class="update-from-master"></button>
+                        <?php } else { ?>
+                            <button disabled="disabled" class="update-from-master"
+                                    title="Update from origin/master"></button>
+                        <?php } ?>
+                        <?php if ($inst->type === 'local') { ?>
+                            <?php if (($currentBranch === 'master') || count($branch['behind']['master'])) { ?>
+                                <button disabled="disabled" class="cherry-pick"></button>
+                            <?php } else { ?>
+                                <button onclick="show($id('cherryPickForm')); hide($id('branchForm'))"
+                                        title="Cherry-pick" class="cherry-pick"></button>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if (($branch['name'] === 'master') || count($currentBranchBehindCommits) || count($currentBranchAheadCommits)): ?>
+                            <button disabled="disabled" class="rename" title="Rename branch"></button>
+                        <?php else : ?>
+                            <button
+                                onclick="inst.renameBranchDialog(<?= var2htmlValue($branch['name']) ?>);"
+                                title="Rename branch" class="rename"></button>
+                        <?php endif; ?>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($branch['name'] === 'master'): ?>
+                        <button disabled="disabled" class="remove" title="Remove"></button>
+                    <?php else : ?>
+                        <button class="remove" title="Remove"
+                                onclick="inst.removeBranch(<?= var2htmlValue($branch['name']) ?>,<?= (int)!count($branch['ahead']['master']) ?>)"></button>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php } ?>
+        <?php if ($currentBranch && !isset($branches[$currentBranch])) { ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="padding-left: 20px">
+                    <span style="color: gray;"><b>*</b> </span>
+                    <span style="font-weight: bold; color: gray"><?= html2text($currentBranch) ?></span>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+    <br>
+    <br>Create branch from remote master:
+    <br><input type="text" id="branchName" style="width: 500px" onkeyup="if(event.keyCode==13) inst.createBranch()"/>
+    <br>
+    <button onclick="inst.adjustBranchName('branchName')">Adjust name</button>
+    <button onclick="inst.createBranch()">Create</button>
+</div>
+
+<?php /* cherry-pick is available only for local inst and only for remote branches  */ ?>
+<?php if ($currentBranch && ($inst->type === 'local') && isset($branches[$currentBranch])) { ?>
+    <div id="cherryPickForm" style="display: none; padding-left: 10px">
+        <?= $inst->form('git/branch/cherryPick/form', array('currentBranch' => $currentBranch, 'branches' => $branches)); ?>
+    </div>
+<?php } ?>

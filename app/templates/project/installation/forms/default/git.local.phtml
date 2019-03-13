@@ -1,0 +1,31 @@
+<table>
+    <tr>
+        <td class="left-links">
+            <?=
+            template('navigation/links', array(
+                'links' => array(
+                    'git/modifications' => 'Modifications',
+                    'git/branch' => array(
+                        'title' => 'Branches',
+                        'links' => array(
+                            'git/branch' => 'List',
+                            'git/codeReview' => 'Code review',
+                            'git/pruneBranches' => 'Prune',
+                        ),
+                    ),
+                    'git/tag' => array(
+                        'title' => 'Tags',
+                        'links' => array(
+                            'git/tag' => 'List',
+//                            'git/tag/codeReview' => 'Code review',
+                            'git/pruneTags' => 'Prune',
+                        ),
+                    ),
+                    'git/changelist' => 'Changelist',
+                )
+            ))
+            ?>
+        </td>
+        <td id="linkContent"></td>
+    </tr>
+</table>

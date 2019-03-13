@@ -1,0 +1,16 @@
+<?php if (count($warnings)) { ?>
+    <div style="color: #e67004">
+        <b>Warnings:</b>
+        <?php foreach ($warnings as $warning) { ?>
+            <br>
+            <span
+                    style="white-space: pre"
+            ><?= html2text($warning) ?></span>
+        <?php } ?>
+    </div>
+    <br>
+<?php } ?>
+
+<span style="color: green">
+    Modules have been installed, see Git -> Modifications
+</span>

@@ -1,0 +1,6 @@
+You shall manually add these lines to <?= /** @var \Project\Installation $inst */
+$inst->getDockerComposeRoot() ?>.gitignore
+<pre>
+<?= implode("\n", $inst->getDockerComposeGitIgnoreFiles()) ?>
+</pre>
+<?= $inst->getContinueButton() ?>

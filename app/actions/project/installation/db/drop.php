@@ -1,0 +1,3 @@
+<?php
+
+Mysql::dropDb($ARG);

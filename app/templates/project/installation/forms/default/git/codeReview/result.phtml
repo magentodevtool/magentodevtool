@@ -1,0 +1,30 @@
+<?php
+
+$branchIndex = 0;
+foreach ($diffs as $branchName => $branchDiff) {
+    ?>
+    <div style="float: right;">
+        <button onclick="codeReview.updateBranchDiffDisplay(<?= var2htmlValue($branchIndex) ?>, 'block')">
+            Expand All
+        </button>
+        <button onclick="codeReview.updateBranchDiffDisplay(<?= var2htmlValue($branchIndex) ?>, 'none')">
+            Collapse All
+        </button>
+    </div>
+    <div class="branch"
+         onclick="codeReview.branchClick(<?= var2htmlValue($branchIndex) ?>)"
+         id="branch_<?= html2text($branchIndex) ?>">
+        <?= html2text($branchName) ?>
+    </div>
+    <div class="branch-diff"
+         style="display: block"
+         id="branch_diff_<?= html2text($branchIndex) ?>">
+        <?= count($branchDiff) == 0 ? '<div class="file">No modifications</div>' : '' ?>
+        <?= $inst->form('git/diff', array('diff' => $branchDiff, 'readOnly' => true, 'collapseMode' => 'all')) ?>
+        <?php
+        $branchIndex++;
+        ?>
+    </div>
+    <?php
+}
+?>

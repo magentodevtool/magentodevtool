@@ -1,0 +1,21 @@
+<?php /** @var \Project\Installation $inst */ ?>
+<div class="console-description">
+    Entered Bash code will be executed in the application root
+</div>
+
+<?php
+$options = ['inst' => $inst];
+if ($inst->webServer->type === 'docker') {
+    $options['toolbar'] = 'toolbar/docker';
+}
+?>
+
+<?= template('consoleTextarea', $options) ?>
+
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'runBash';
+        setValue(<?= json_encode($inst->vars->get('lastBashCommands')) ?>);
+        setMode('text/x-sh');
+    }
+</script>

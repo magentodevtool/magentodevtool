@@ -1,0 +1,4 @@
+Found: <?= count($files) ?>
+<?php foreach ($files as $file) { ?>
+    <br><?= html2text($file['name']) ?>
+<?php } ?>

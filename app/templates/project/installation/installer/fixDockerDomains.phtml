@@ -1,0 +1,20 @@
+<?php /** @var \Project\Installation $inst */ ?>
+Can't set network aliases <?= html2text($inst->domain) ?> in
+<strong>app/etc/docker-compose.local.yml</strong>, please do it manually:
+
+<pre>
+    nginx-frontend:
+
+    ...
+
+    networks:
+      back:
+        aliases:
+          - <?= html2text($inst->domain) ?>
+    front:
+        aliases:
+          - <?= html2text($inst->domain) ?>
+
+</pre>
+
+<?= $inst->getContinueButton() ?>

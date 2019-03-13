@@ -1,0 +1,25 @@
+<table class="projects">
+    <?php foreach ($list as $projectName => $project) { ?>
+        <tr>
+            <td>
+                <b><?= html2text($projectName) ?></b>
+            </td>
+            <td>
+                <?php foreach ($project->installations as $installationName => $installation) { ?>
+                    <?php if (!Project::isInstAllowed($installation->type)) {
+                        continue;
+                    } ?>
+                    <div class="installation-activity"
+                         style="opacity: <?= Activity::getPercent($projectName, $installationName) / 100 ?>;">
+                    </div>
+                    <span class="installation <?= preg_match('~build~', $installationName) ? 'build' : '' ?>">
+				        <a href="/?view=installation&source=<?= urlencode($source) ?>&project=<?= urlencode($projectName) ?>&name=<?= urlencode($installationName) ?>">
+                            <?= html2text($installationName) ?>
+                        </a>
+                        <?= template('project/installation/labels', ['inst' => $installation]) ?>
+			        </span>
+                <?php } ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

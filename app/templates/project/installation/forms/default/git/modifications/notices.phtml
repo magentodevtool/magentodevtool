@@ -1,0 +1,11 @@
+<?php
+$resultMsgs = $inst->git->getModificationsNotices($diff);
+if (!count($resultMsgs)) {
+    return;
+}
+?>
+<div id="notices.container">
+    <?php foreach ($resultMsgs as $key => $resultMsg) { ?>
+        <?= $inst->form('git/modifications/notice', $resultMsg) ?>
+    <?php } ?>
+</div>

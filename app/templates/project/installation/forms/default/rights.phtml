@@ -1,0 +1,24 @@
+<script type="application/javascript">
+    onFixRightsModeChange = function () {
+        $id('fixOptions').style.display = $id('fixSpecific').checked ? 'block' : 'none';
+    }
+</script>
+
+<div id="fixRightsForm">
+    <input name="mode" value="all" type="radio" id="flushAll" checked="checked" onchange="onFixRightsModeChange()"/>
+    <label for="flushAll"><b>All</b> <span style="font-size: 14px">(except media/catalog)</span></label>
+    <br>
+    <input name="mode" value="specific" type="radio" id="fixSpecific" onchange="onFixRightsModeChange()"/>
+    <label for="fixSpecific"><b>Specific</b></label>
+
+    <div id="fixOptions" style="display:none; padding-left: 20px">
+        <input name="fixes[dev]" type="checkbox" id="fixDev"/><label for="fixDev">repository (.git &
+            codebase)</label><br>
+        <input name="fixes[var]" type="checkbox" id="fixVar"/><label for="fixVar">var/</label><br>
+        <input name="fixes[media]" type="checkbox" id="fixMedia"/><label for="fixMedia">media/</label><br>
+        <input name="fixes[media/catalog]" type="checkbox" id="fixMediaCatalog"/><label for="fixMediaCatalog">media/catalog/</label><br>
+    </div>
+</div>
+<br>
+<button style="min-width: 80px" onclick="inst.fixRights(getInputData('fixRightsForm'))">Fix</button>
+<div id="fixRights" style="margin-top: 10px; color: green;"></div>

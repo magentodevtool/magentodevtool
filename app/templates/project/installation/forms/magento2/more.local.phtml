@@ -1,0 +1,32 @@
+<table>
+    <tr>
+        <td class="left-links">
+            <?=
+            template('navigation/links', array(
+                'links' => array(
+                    'more/bashConsole' => array(
+                        'title' => 'Console',
+                        'links' => array(
+                            'more/bashConsole' => 'Bash',
+                            'more/phpConsole' => 'PHP',
+                        ),
+                    ),
+                    'config/backup' => array(
+                        'title' => 'Config',
+                        'links' => array(
+                            'config/backup' => 'Backup',
+                        ),
+                    ),
+                    'more/log' => 'Log',
+                    'more/info' => 'Info',
+                    'more/rights' => 'Rights',
+                    'findFile' => 'Find file',
+                    'docker' => 'Docker',
+                    'uninstall' => 'Uninstall',
+                )
+            ))
+            ?>
+        </td>
+        <td id="linkContent"></td>
+    </tr>
+</table>

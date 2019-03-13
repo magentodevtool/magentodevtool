@@ -1,0 +1,13 @@
+<?= $inst->form('db/import/dialog') ?>
+<script type="application/javascript">
+    with (dbImport) {
+        database = <?= json_encode($inst->getDbCredentials()->dbname)?>;
+        complete = function () {
+            $id('importDbForm').remove();
+            installer.addMessage('done');
+            installer.install();
+        }
+        adjustToDev = true;
+    }
+    dbImport.init();
+</script>

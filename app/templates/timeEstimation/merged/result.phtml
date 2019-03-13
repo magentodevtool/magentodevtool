@@ -1,0 +1,46 @@
+<?php
+/** @var \TimeEstimation $te1 */
+/** @var \TimeEstimation $te2 */
+/** @var \TimeEstimation $mergedTe */
+$teTypeAnchor = preg_replace('~\s+~', '_', $mergedTe->result->type);
+if (!empty($mergedTe->alreadySpent)) {
+    $alreadySpentString = ' incl. ' . round($mergedTe->alreadySpent, 1) . 'h already spent';
+} else {
+    $alreadySpentString = '';
+}
+$teValueStr = $mergedTe->result->totals->grandRounded . 'h';
+?>
+
+<a href="http://company-wiki/wiki/Time_Estimation#<?= urlencode($teTypeAnchor) ?>">
+    <?= html2text($mergedTe->result->type) ?>
+</a>: <?= html2text($teValueStr) ?>
+<?= html2text($alreadySpentString) ?>.
+<span>
+    DEV
+    <span id="teValue" orig-value="<?= html2text($te1->result->totals->normRounded) ?>h"
+    ><?= html2text($te1->result->totals->normRounded) ?>h</span>,
+    FED
+    <a href="<?= TimeEstimation\Storage::getLinkById($childTeId) ?>" style="font-weight: bold; color: black">
+        <?= html2text($te2->result->totals->normRounded) ?>h
+    </a>
+</span>
+
+<?php if ($te1->timeLines['code review']['max']) { ?>
+    <div>
+        DEV code review starts at <?= html2text($mergedTe->result->dev1CodeReviewStartsRounded) ?>h
+    </div>
+<?php } ?>
+<div>
+    FED starts at <?= html2text($mergedTe->result->dev2StartsRounded) ?>h
+</div>
+<?php if ($te2->timeLines['code review']['max']) { ?>
+    <div>
+        FED code review starts at <?= html2text($mergedTe->result->dev2CodeReviewStartsRounded) ?>h
+    </div>
+<?php } ?>
+<div>
+    Alpha test starts at <?= html2text($mergedTe->result->testingStartsRounded) ?>h
+</div>
+<div>
+    Beta check starts at <?= html2text($mergedTe->result->betaCheckStartsRounded) ?>h
+</div>

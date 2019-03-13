@@ -1,0 +1,31 @@
+<?= template('consoleTextarea', array(
+    'before' => 'before/mysql',
+    'toolbar' => 'toolbar/mysql',
+)) ?>
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'db/runSql';
+        wrapResultInPre = false;
+        setValue(<?= json_encode($inst->vars->get('lastDbQueries')) ?>);
+        confirm = function () {
+            var isLive = /Live/i.test(inst.name);
+            var stripedExpr = stripSqlComments(getValue());
+            var isModification = /(DELETE|UPDATE|INSERT|REPLACE|DROP|TRUNCATE)\s/i.test(stripedExpr);
+            if (isLive && isModification) {
+                return window.confirm('ARE YOU SURE YOU WANT TO MODIFY PRODUCTION??');
+            }
+            return true;
+        }
+    }
+
+    inst.action(
+        'db/console/autocomlete/getTablesColumns',
+        null,
+        function (tables) {
+            CodeMirror.commands.autocomplete = function (cm) {
+                CodeMirror.showHint(cm, CodeMirror.hint.sql, {tables: tables});
+            }
+        },
+        false
+    );
+</script>

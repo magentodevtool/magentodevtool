@@ -1,0 +1,71 @@
+<?php
+
+$tablesDisplay = $fieldsDisplay = $valuesDisplay = 'none';
+switch (true) {
+    case $field_name_rx === '' && $field_value_rx === '':
+        $tablesDisplay = 'block';
+        break;
+    case $field_value_rx === '':
+        $fieldsDisplay = 'block';
+        break;
+    default:
+        $valuesDisplay = 'block';
+        break;
+}
+
+?>
+
+<?php if (empty($tables)) { ?>
+    Matched tables.. none
+<?php } else { ?>
+    <a href="#" onclick="showHide($id('searchResultTables')); return false;">
+        Matched tables..
+    </a>
+    <div id="searchResultTables" style="display: <?= $tablesDisplay ?>; padding-left: 5px">
+        <?php foreach ($tables as $table) { ?>
+            <?= html2text($table) ?><br>
+        <?php } ?>
+    </div>
+<?php } ?>
+
+<br>
+<?php if (empty($fields)) { ?>
+    Matched fields.. none
+<?php } else { ?>
+    <a href="#" onclick="showHide($id('searchResultFields')); return false;">
+        Matched fields..
+    </a>
+    <div id="searchResultFields" style="display: <?= $fieldsDisplay ?>; padding-left: 5px">
+        <?php foreach ($fields as $field) { ?>
+            <?= html2text($field['table']) . '.' . html2text($field['name']) ?><br>
+        <?php } ?>
+    </div>
+<?php } ?>
+
+<br>
+<?php if (empty($values)) { ?>
+    Matched values.. none
+    <?php return; ?>
+<?php } else { ?>
+    <a href="#" onclick="showHide($id('searchResultValues')); return false;">
+        Matched values..
+    </a>
+    <div id="searchResultValues" style="display: <?= $valuesDisplay ?>; padding-left: 5px">
+        <table class="list">
+            <?php foreach ($values as $value) { ?>
+                <tr>
+                    <td>
+                        <?= html2text($value['table']) . '.' . html2text($value['field']) ?>
+                    </td>
+                    <td style="font-weight: bold">
+                        <?= html2text($value['count']) ?>
+                    </td>
+                    <td style="color: gray">
+                        select * from `<?= html2text($value['table']) ?>` where `<?= html2text($value['field']) ?>`
+                        regexp "<?= mysqlEscapeString($field_value_rx) ?>"
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+<?php } ?>

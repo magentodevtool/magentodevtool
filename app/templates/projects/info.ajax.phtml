@@ -1,0 +1,22 @@
+<table cellspacing="0">
+    <tr style="font-weight: bold;">
+        <td>Project</td>
+        <td>Installation</td>
+        <td>Edition</td>
+        <td>Version</td>
+        <td>Patches</td>
+    </tr>
+    <?php foreach ($projectsInfo as $project => $info): ?>
+        <tr>
+            <td><?= html2text($project) ?></td>
+            <td><?= html2text($info->installation) ?></td>
+            <?php if (!isset($info->error)): ?>
+                <td><?= html2text($info->edition) ?></td>
+                <td><?= html2text($info->version) ?></td>
+                <td><?= isset($info->patches) ? html2text(join(', ', (array)$info->patches)) : "" ?></td>
+            <?php else: ?>
+                <td colspan="3" style="color:red;">Error: <?= html2text($info->error) ?></td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+</table>

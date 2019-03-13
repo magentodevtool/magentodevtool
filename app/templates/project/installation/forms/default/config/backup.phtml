@@ -1,0 +1,17 @@
+<div>
+    <div id="configBackupForm">
+        <table class="form">
+            <tr>
+                <td>Backup comment</td>
+                <td><input class="wide" name="comment" onkeyup="inst.validateConfigBackupForm();"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button id="backupButton" onclick="inst.backupConfig()" disabled="disabled">Backup</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="config.backup.result"></div>
+</div>

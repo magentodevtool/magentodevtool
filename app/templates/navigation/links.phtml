@@ -1,0 +1,14 @@
+<ul>
+    <?php foreach ($links as $linkId => $link) { ?>
+        <li>
+            <?php $linkTitle = is_array($link) ? $link['title'] : $link ?>
+            <a href="#" id="link.<?= $linkId ?>"
+               onclick="inst.linkClick(<?= var2htmlValue($linkId) ?>, this); return false;">
+                <?= html2text($linkTitle) ?>
+            </a>
+            <?php if (is_array($link)) { ?>
+                <?= template('navigation/links', array('links' => $link['links'])) ?>
+            <?php } ?>
+        </li>
+    <?php } ?>
+</ul>

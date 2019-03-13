@@ -1,0 +1,27 @@
+<div id="dbTablesContainer">
+    <table id="dbTables">
+        <tr>
+            <th>
+                <input type="checkbox" checked="checked"
+                       onclick="updateAll('.dbTableCheckbox', 'checked', this.checked);">
+            </th>
+            <th>Table</th>
+            <th>Size in MB</th>
+        </tr>
+        <?php foreach ($vars['tables'] as $tableName => $tableInfo): ?>
+            <tr>
+                <td style="text-align: center;">
+                    <input type="checkbox" name="tables[<?= html2text($tableName) ?>]" class="dbTableCheckbox"
+                           checked="checked">
+                </td>
+                <td><?= html2text($tableName) ?></td>
+                <td><?= html2text($tableInfo->size) ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+<div>
+    <button id="continueDbTablesButton" onclick="backup.create();">
+        Continue
+    </button>
+</div>

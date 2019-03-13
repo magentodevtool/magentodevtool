@@ -1,0 +1,6 @@
+<?= html2text($inst->domain) ?> is not accessible, please fix
+<br>
+<span style="color: gray">
+    &nbsp;Error detected by request to <?= $inst->getDomainAvailbaleAssertFile() ?>
+</span>
+<?= $inst->getContinueButton() ?>

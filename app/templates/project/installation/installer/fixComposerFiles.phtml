@@ -1,0 +1,8 @@
+You shall manually init Composer the project root <?= $inst->getDockerComposeRoot() ?>:
+<pre>
+    <?= html2text(cmd('cd %s && \\', $inst->_appRoot)) ?>
+    <strong>composer init --stability=alpha --name=[composer_project_name] ?>
+        --description='<?= $inst->getComposerProjectName() ?>' --author='[author]'
+        --type=project --license=proprietary --repository=[repository]</strong>
+</pre>
+<?= $inst->getContinueButton() ?>

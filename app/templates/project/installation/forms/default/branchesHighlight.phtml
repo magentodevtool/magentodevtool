@@ -1,0 +1,20 @@
+<a
+        href="#"
+        style="background-color: #5bff61; color: black"
+        onclick="branchesHighlight.onButtonClick(); return false;"
+>
+    highlight..
+</a>
+<textarea
+        id="branchesHighlight.text"
+        style="position: absolute; margin-top: 0; display: none"
+        rows="5"
+        cols="50"
+        onkeyup="branchesHighlight.onTextKeyUp()"
+        onchange="branchesHighlight.onTextChange()"
+        onfocus="branchesHighlight.onTextFocus()"
+>Enter here the text which contains the issue codes</textarea>
+
+<script type="application/javascript">
+    branchesHighlight = new BranchesHighlight(<?= json_encode($targetElements) ?>);
+</script>

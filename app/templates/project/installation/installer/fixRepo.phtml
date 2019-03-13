@@ -1,0 +1,3 @@
+Failed to clone sources, do it manually:<br>
+<?= html2text(cmd('git clone %s %s', $inst->project->repository->url, $inst->folder)) ?><br>
+<?= $inst->getContinueButton() ?>

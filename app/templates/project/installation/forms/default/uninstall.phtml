@@ -1,0 +1,46 @@
+<?php
+
+if ($inst->webServer->type == 'apache') {
+    $commands = array(
+        'sudo rm /etc/apache2/sites-available/' . $inst->domain . '.conf',
+        'sudo rm /etc/apache2/sites-enabled/' . $inst->domain . '.conf',
+        'sudo sed -i "s/' . getServiceLocalIp('apache') . ' ' . $inst->domain . '//g" /etc/hosts',
+        'sudo sed -i \':a;N;$!ba;s/\n\n/\n/g\' /etc/hosts',
+        'sudo /etc/init.d/apache2 reload',
+        cmd('sudo rm -rf %s', $inst->folder)
+    );
+} elseif ($inst->webServer->type == 'docker') {
+    $commands = array(
+        cmd('docker-compose -f %s -p %s down --rmi local -v',
+            $inst->_docRoot . Project\Installation\WebServer\Docker\Config::DOCKER_COMPOSE_FILE_MAIN,
+            $inst->getDockerComposeProjectName()),
+        cmd('sudo rm -rf %s', $inst->folder)
+    );
+} else {
+    $commands = array(
+        'sudo rm /etc/nginx/sites-available/' . $inst->domain . '.conf',
+        'sudo rm /etc/nginx/sites-enabled/' . $inst->domain . '.conf',
+        'sudo sed -i "s/' . getServiceLocalIp('nginx') . ' ' . $inst->domain . '//g" /etc/hosts',
+        'sudo sed -i \':a;N;$!ba;s/\n\n/\n/g\' /etc/hosts',
+        'sudo /etc/init.d/nginx reload',
+        'sudo /etc/init.d/' . getFpmServiceName() . ' reload',
+        cmd('sudo rm -rf %s', $inst->folder)
+    );
+}
+
+if ($inst->webServer->type != 'docker') {
+    $cred = $inst->getDbCredentials();
+    if (Mysql::server($cred) && Mysql::db($cred->dbname)) {
+        $commands[] = cmd(
+            ' MYSQL_PWD=%s mysql -h%s -u%s -e %s',
+            $cred->password,
+            $cred->host,
+            $cred->username,
+            'drop database ' . Mysql::quoteDbName($cred->dbname)
+        );
+    }
+}
+?>
+<textarea class="commands" spellcheck="false"
+          rows="<?= count($commands) + 1 ?>"
+><?= html2text(implode("\n", $commands) . "\n") ?></textarea>

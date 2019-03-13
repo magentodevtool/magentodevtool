@@ -1,0 +1,35 @@
+<?php
+try {
+    $notes = $inst->deployment->customNotes->get();
+} catch (Exception $e) {
+}
+?>
+<div class="deployment-custom-notes-container">
+    <?php if (isset($e)) { ?>
+        <?php $warning = "There are custom deployment notes but their load wasn't successful: " . $e->getMessage(); ?>
+        <div class="warning"><?= html2text($warning) ?></div>
+        <br>
+    <?php } else { ?>
+        <?php if (count($notes)) { ?>
+            <div id="deployment-custom-notes-show" style="display: none">
+                <a href="#" onclick="deployment.showHideCustomNotes()">Show notes..</a>
+            </div>
+            <div id="deployment-custom-notes">
+                <ul>
+                    <?php foreach ($notes as $note): ?>
+                        <li><?= html2text($note) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <div style="padding-bottom: 10px">
+                    <button onclick="deployment.markCustomNotesAsRead()">Mark as read</button>
+                    <span>(until the first change)</span>
+                </div>
+                <?php if ($inst->deployment->customNotes->areRead()) { ?>
+                    <script type="text/javascript">
+                        deployment.showHideCustomNotes();
+                    </script>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    <?php } ?>
+</div>

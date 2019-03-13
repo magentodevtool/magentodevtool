@@ -1,0 +1,173 @@
+<?php if (!$inst->hasSshAccess) { ?>
+    <?= $inst->form('deployment/noSsh') ?>
+    <?php return; ?>
+<?php } ?>
+<?php $deplInst = $inst->deployment->localInstallation->get(); ?>
+<?php if (!$deplInst) { ?>
+    <span class="error">Local deployment environment not found</span>
+    <?php return; ?>
+<?php } ?>
+<?php if (!$deplInst->checkRepo()) { ?>
+    <?= $inst->form('deployment/prepareLocalRepo'); ?>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$inst->isCloud) { ?>
+    <?= $inst->form('git/fetch') ?>
+<?php } ?>
+
+<?php if (!Config::getNode('isCentralized') && $inst->project->type === 'magento1') { ?>
+    <div class="warning" style="margin: 0 0 10px 10px; font-weight: bold; white-space: normal; font-size: 17px">
+        It's strongly recommended to use Centralized Devtool for Magento 1 deployment
+    </div>
+<?php } ?>
+
+<?php
+
+$deployment = $inst->deployment->getData();
+
+if (!$deployment->type) {
+    echo '<span style="color:red">Can\'t determine deployment strategy. Remote should be on a tag or Alpha*, Beta* branch</span>';
+    return;
+}
+if (!$deployment->branchesToSelect) {
+    echo '<span style="color:red">Seems that you have no remote branches which could be deployed</span>';
+    return;
+}
+
+?>
+
+<?php if (!$inst->isCloud && Config::getNode('isCentralized') && $inst->project->type === 'magento2' && $deployment->mage2->mode === 'production') { ?>
+    <div class="error" style="margin: 0 0 10px 10px; white-space: normal; font-size: 17px">
+        Deployment to Magento 2 production environment can be done only through Local Devtool
+    </div>
+    <?php return; ?>
+<?php } ?>
+
+<script type="application/javascript">
+    deployment = new Deployment(<?=json_encode($deployment)?>);
+</script>
+
+<?= $inst->form('deployment/customNotes'); ?>
+
+<div id="deploymentForm" style="padding-left: 10px">
+
+    Select branches to deploy:
+
+    <?= $inst->form('branchesHighlight', array('targetElements' => '#deploymentForm label')) ?>
+
+    <div style="padding: 5px 0 7px 20px">
+        <?php foreach ($deployment->branchesToSelect as $branch) { ?>
+            <?php $branchId = "Branch." . $branch->name ?>
+            <div style="float: left">
+                <input type="checkbox" id="<?= html2text($branchId) ?>"
+                       name="branches[<?= html2text($branch->name) ?>]"
+                       onchange="deployment.generateNewTagComment()"
+                />
+            </div>
+            <div>
+                <label for="<?= html2text($branchId) ?>" id="<?= html2text($branchId . '.label') ?>">
+                    <?= html2text($branch->name) ?>
+                </label>
+            </div>
+            <div style="clear: both"></div>
+        <?php } ?>
+    </div>
+
+    <?php if ($deployment->type === 'staging') { ?>
+        <div style="padding: 0 0 7px 0">
+            <div style="float: left">
+                <input type="checkbox" id="resetEnvironment" name="resetEnvironment"/>
+            </div>
+            <div>
+                <label for="resetEnvironment">Reset Environment</label>
+                <div title="get info" class="info-icon"
+                     style="position: absolute; display: inline-block"
+                     onclick="inst.popupHtml(<?= var2htmlValue('Remove all changes which were deployed before') ?>)">
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if (
+        !$inst->isCloud
+        && $inst->project->type === 'magento2'
+        && $deployment->mage2->mode === 'production'
+    ) { ?>
+        Compilation options:
+        <div style="padding: 5px 0 7px 20px">
+            <div style="float: left">
+                <input type="checkbox" checked="checked" id="doCompileDi" name="doCompileDi"/>
+            </div>
+            <div>
+                <label for="doCompileDi">Compile DI</label>
+            </div>
+            <div style="clear: both"></div>
+            <div style="float: left">
+                <input type="checkbox" checked="checked" id="doCompileStaticContent" name="doCompileStaticContent"
+                       onclick="deployment.showHideCompilationType()"/>
+            </div>
+            <div>
+                <label for="doCompileStaticContent">Compile static content</label>
+                <?php if ($deployment->mageVersion < '2.2') { ?>
+                    <div id="staticContentCompilationType">
+                        <input type="radio" value="standard" name="staticContentCompilationType"
+                               id="staticContentCompilationTypeStandard">
+                        <label for="staticContentCompilationTypeStandard">Standard</label>
+                        <input type="radio" value="optimized" checked="checked"
+                               name="staticContentCompilationType"
+                               id="staticContentCompilationTypeOptimized">
+                        <label for="staticContentCompilationTypeOptimized">Optimized</label>
+                        <div title="get info" class="info-icon"
+                             style="position: absolute;display: inline-block"
+                             onclick="inst.popupHtml(<?= var2htmlValue('It will compile only first locale and populate result into other locales.') ?>)">
+
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if ($deployment->type === 'production') { ?>
+        <table style="padding-left: 0px">
+            <?php if (!empty($deployment->currentRemoteTags)) { ?>
+                <tr>
+                    <td>Current tags:</td>
+                    <td><?= html2text(implode(', ', $deployment->currentRemoteTags)) ?></td>
+                </tr>
+            <?php } ?>
+            <?php if (!$deployment->isCurrentTagHighest) { ?>
+                <tr>
+                    <td>Highest tag:</td>
+                    <td><?= html2text($deployment->highestTagName) ?></td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <td>New tag name:</td>
+                <td>
+                    <input type="text" name="newTagName" value="<?= html2text($deployment->newTagName) ?>"
+                           style="width: 400px"/>
+                </td>
+            </tr>
+            <tr>
+                <td>New tag comment: &nbsp;</td>
+                <td>
+                    <input type="text" id="deployment.newTagComment" name="newTagComment"
+                           style="width: 400px"
+                           readonly/>
+                    <input type="checkbox" checked id="deployment.generateNewTagComment"
+                           onchange="deployment.generateNewTagCommentOnOff()"/>
+                    <label for="deployment.generateNewTagComment">Auto</label>
+                </td>
+            </tr>
+        </table>
+    <?php } ?>
+
+    <button onclick="deployment.start();">Continue</button>
+
+    <span id="deploymentFormStatus"></span>
+
+</div>
+
+<div id="deploymentProgress"></div>

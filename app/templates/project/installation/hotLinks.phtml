@@ -1,0 +1,11 @@
+<?php if ($inst->project->type === 'simple') {
+    return;
+} ?>
+
+<sup>
+    &nbsp;
+    <a
+            href="/?view=magento/autologin/bo&source=<?= urlencode($inst->source) ?>&project=<?= urlencode($inst->project->name) ?>&name=<?= urlencode($inst->name) ?>"
+            style="cursor: pointer; font-size: small; color: #000000"
+    >BO</a>
+</sup>

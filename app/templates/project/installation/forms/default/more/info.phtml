@@ -1,0 +1,16 @@
+<?php $info = $inst->magento->getInfo(); ?>
+
+<button onclick="inst.getInfo()" style="width: 160px">Refresh</button>
+
+<div id="magento.info.container">
+    <?php if (!$info) { ?>
+        <p>Failed to get version info</p>
+    <?php } else { ?>
+        <p>
+            <?= html2text($info->edition . ' ' . $info->version) ?>
+            <?php if (isset($info->patches)) { ?>
+                <br/>Patches: <?= html2text(join(', ', (array)$info->patches)) ?>
+            <?php } ?>
+        </p>
+    <?php } ?>
+</div>

@@ -1,0 +1,9 @@
+Dwd branch "<?= html2text($branch) ?>" contains foreign commits,
+<a href="javascript:void(0)" onclick="showHide($id('<?= html2text($branch) ?>.details.container'))">details..</a>
+<div id="<?= html2text($branch) ?>.details.container" style="display: none;">
+    <ul>
+        <?php foreach ($commits as $commit): ?>
+            <li style="white-space: pre"><?= html2text($commit) ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>

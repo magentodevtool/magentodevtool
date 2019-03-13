@@ -1,0 +1,39 @@
+<div id="importMediaForm">
+    <table>
+        <tbody id="importRemoteMediaFolders">
+        <tr>
+            <td>Remote Installation</td>
+            <td>
+				<span class="remote-installations-list">
+					<select id="remoteInstallation" name="remote" class="wide" zero-option="select.."
+                            onchange="Rsync.remoteInstallationChange(this)"></select>
+					<span class="empty-message">
+						- You have no remote installation for this project, please add and press
+					</span>
+					<button onclick="Rsync.refreshRemoteInstallations()">Refresh</button>
+				</span>
+            </td>
+        </tr>
+        <tr id="remoteMediaFolder" style="display: none"></tr>
+        </tbody>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="Rsync.continue(this)" disabled="disabled" id="continueButton">Continue</button>
+            </td>
+        </tr>
+        <tr style="display: none" id="importMediaProgressContainer">
+            <td></td>
+            <td>
+                <div id="importMediaProgress"></div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="importMediaMessages"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="application/javascript">Rsync.init('media');</script>

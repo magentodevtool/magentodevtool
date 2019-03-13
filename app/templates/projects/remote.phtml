@@ -1,0 +1,40 @@
+<?php
+
+if (!\Projects\Remote::getRepoUrl()) {
+    return;
+}
+
+try {
+    $visibleList = \Projects\Remote::getVisibleList();
+} catch (\Exception $exception) {
+}
+
+?>
+
+<br>
+<div id="projects.remote.container" style="display: inline;">
+        <span style="font-weight: bold; font-size: 24px; padding-right: 5px">
+            General projects
+        </span>
+    <span id="synchronize.container"
+          style="minWidth: 20px; padding: 0 0 0 5px; display: inline-block">
+        </span>
+</div>
+
+<?php if (isset($exception)) { ?>
+    <span style="color: red">
+        (problem when remote projects load: <?= html2text($exception->getMessage()) ?>)
+    </span>
+<?php } else { ?>
+    <div id="projects.remote.list">
+        <?= template('projects', array('list' => $visibleList, 'source' => 'remote')) ?>
+        <?= !count((array)$visibleList) ? 'Use customize button to make needed projects visible<br>' : '' ?>
+        <button onclick="projects.remote.options.edit()">Customise List</button>
+    </div>
+    <?= template('projects/remote/options/form') ?>
+<?php } ?>
+<br>
+
+<script type="application/javascript">
+    projects.remote.renderStatus();
+</script>

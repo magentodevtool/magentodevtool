@@ -1,0 +1,84 @@
+<span class="console-hotkeys-button">
+    <a href="#" onclick="showHotkeys(); return false;">
+        Hotkeys?
+    </a>
+</span>
+<div id="console-hotkeys" style="display: none">
+    <table class="console-hotkeys-table">
+        <tr>
+            <th colspan="2">Console hotkeys</th>
+        </tr>
+        <tr>
+            <td>Ctrl-Enter</td>
+            <td>Submit</td>
+        </tr>
+        <tr>
+            <td>Ctrl-/</td>
+            <td>Comment lines</td>
+        </tr>
+        <tr>
+            <td>Ctrl-Space</td>
+            <td>Autocomplete</td>
+        </tr>
+        <tr>
+            <td>Ctrl-D</td>
+            <td>Select next word</td>
+        </tr>
+        <tr>
+            <td>F9</td>
+            <td>Sort lines insensitive</td>
+        </tr>
+        <tr>
+            <td>Ctrl-J</td>
+            <td>Join lines</td>
+        </tr>
+        <tr>
+            <td>Ctrl-L</td>
+            <td>Select line</td>
+        </tr>
+        <tr>
+            <td>Shift-Ctrl-D</td>
+            <td>Duplicate line</td>
+        </tr>
+        <tr>
+            <td>Shift-Ctrl-K</td>
+            <td>Delete line</td>
+        </tr>
+        <tr>
+            <th colspan="2" style="padding-top: 15px">
+                MySQL hotkeys
+            </th>
+        </tr>
+        <tr>
+            <td>Alt-T</td>
+            <td>Show Tables</td>
+        </tr>
+        <tr>
+            <th colspan="2" style="padding-top: 15px">
+                Standard hotkeys
+            </th>
+        </tr>
+        <tr>
+            <td>Ctrl-Left</td>
+            <td>Go word left</td>
+        </tr>
+        <tr>
+            <td>Ctrl-Right</td>
+            <td>Go word right</td>
+        </tr>
+        <tr>
+            <td>Ctrl-Backspace</td>
+            <td>Delete previous word</td>
+        </tr>
+        <tr>
+            <td>Ctrl-Delete</td>
+            <td>Delete next word</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    showHotkeys = function () {
+        new Popup({'html': $id('console-hotkeys').innerHTML});
+    }
+</script>

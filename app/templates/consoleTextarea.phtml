@@ -1,0 +1,29 @@
+<div class="console-top-menu">
+    <?= template('consoleTextarea/' . (isset($before) ? $before : 'before')) ?>
+</div>
+<table id="consoleForm" class="consoleTable" style="border-spacing: 0px;">
+    <tr>
+        <td style="padding: 2px 1px 1px 0">
+            <textarea id="consoleTextareaId" rows="5"
+                      name="consoleText"
+                      spellcheck="false"
+                      wrap="off"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-top: 2px">
+            <?= template('consoleTextarea/' . (isset($toolbar) ? $toolbar : 'toolbar'),
+                isset($vars) ? $vars : null) ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="consoleResult"></div>
+        </td>
+    </tr>
+</table>
+
+<script type="application/javascript">
+    consoleTextarea = new ConsoleTextarea();
+    consoleTextarea.setMode('text/x-mysql');
+</script>

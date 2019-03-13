@@ -1,0 +1,14 @@
+<?php if ($success) { ?>
+    <span style="color:green">
+        Attributes have been imported successfully.
+    </span><br/>
+    <?= html2text($message) ?>
+    <?php
+} else {
+    ?>
+    <span style="color:red">
+        Error: <?= html2text($message) ?>
+    </span>
+    <?php
+}
+?>

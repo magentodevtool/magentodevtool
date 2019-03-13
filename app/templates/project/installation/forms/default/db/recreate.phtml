@@ -1,0 +1,25 @@
+<?php
+/** @var \Project\Installation $inst */
+
+if ($inst->webServer->type !== 'docker') { ?>
+    Not supported for server type <strong><?= $inst->webServer->type ?></strong>
+    <?php return; ?>
+<?php } ?>
+
+<div id="docker" style="">
+    <button onclick="recreateDatabases();">Destroy and re-create MySQL</button>
+</div>
+<script type="application/javascript">
+    recreateDatabases = function () {
+        inst.popupHtml('This will destroy all MySQL data of this project. Are you sure you want to do this?', function () {
+            inst.action(
+                'docker/recreateDatabases',
+                {},
+                function (response) {
+                    console.log(response);
+                    window.location.reload();
+                }
+            );
+        });
+    };
+</script>

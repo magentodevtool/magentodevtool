@@ -1,0 +1,15 @@
+<table id="dbTables" class="console-all-tables">
+    <tr>
+        <th>Table</th>
+    </tr>
+    <?php foreach ($vars['tables'] as $tableName => $tableInfo): ?>
+        <tr>
+            <td>
+                <a href="#"
+                   onclick="consoleTextarea.insertSelectSqlInConsole(<?= var2htmlValue($tableName) ?>); return false;">
+                    <?= html2text($tableName) ?>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

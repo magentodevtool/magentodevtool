@@ -1,0 +1,25 @@
+<div>
+    <input
+            type="checkbox"
+            id="<?= html2text($name) ?>"
+            name="modules[<?= html2text($name) ?>]"
+            onchange="moduleSetup.onModuleChange()"
+        <?= !$valid ? 'disabled="disabled"' : '' ?>
+    />
+    <label
+            for="<?= html2text($name) ?>"
+            style="<?= !$valid ? 'color: gray' : '' ?>"
+    >
+        <?= html2text($name) ?>
+    </label>
+    <?php if (!$valid) { ?>
+        <span style="color: #e57304" title="<?= html2text($error) ?>">
+            !invalid
+        </span>
+    <?php } ?>
+    <?php if ($isInstalled) { ?>
+        <span style="color: green">
+            installed
+        </span>
+    <?php } ?>
+</div>

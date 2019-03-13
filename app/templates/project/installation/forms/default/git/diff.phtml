@@ -1,0 +1,128 @@
+<?php
+
+$simplifyFilePath = function ($file) use ($inst) {
+    if ($inst->folder === $inst->_appRoot) {
+        return $file;
+    }
+    $_appRootRel = str_replace($inst->folder, '', $inst->_appRoot);
+    if (strpos($file, $_appRootRel) === 0) {
+        $file = substr($file, strlen($_appRootRel));
+    } else {
+        $file = '../' . $file;
+    }
+
+    return $file;
+};
+
+$getDiffHtml = function ($diff) {
+
+    $diff = preg_replace('~^@.+?\n~is', '', $diff);
+    $getModeColor = function ($mode) {
+        return $mode === '-' ? '#aa0000' : ($mode === '+' ? '#008800' : 'black');
+    };
+
+    $html = '';
+
+    $modes = array();
+    $lines = array();
+    foreach (explode("\n", $diff) as $line) {
+        if ($line === '') {
+            $line = ' ';
+        }
+        $mode = $line{0};
+        if (!in_array($mode, array('-', '+', ' ', '\\', '@'))) {
+            continue;
+        }
+        $modes[] = $mode;
+        $lines[] = (string)substr($line, 1);
+    }
+
+    // render modes
+    $html .= "\n<div class=\"git-diff-file-modes\">";
+    foreach ($modes as $mode) {
+        if ($mode === '@') {
+            $mode = ' ';
+        }
+        $color = $getModeColor($mode);
+        $html .= "\n<span style=\"color: $color;\">" . html2text($mode) . "</span>";
+    }
+    $html .= "</div>";
+
+    //render lines
+    $html .= "<div class=\"git-diff-file-lines\">";
+    foreach ($lines as $i => $line) {
+        $mode = $modes[$i];
+        if ($mode === '@') {
+            $html .= "<span class=\"break\"><br/>------------------------</span>";
+            continue;
+        }
+        $color = $getModeColor($mode);
+        $lineHtml = html2text($line);
+        $lineHtml = str_replace(' ', '&nbsp;', $lineHtml); // for FF to achieve normal copy-paste
+        $lineHtml = str_replace("\r", '<span style="background-color: black; color: white;">\r</span>', $lineHtml);
+        $html .= "<span style=\"color: $color;\"><br/>$lineHtml</span>"; // <br/> for FF to achieve normal copy-paste
+    }
+    $html .= "\n</div>";
+
+    return $html;
+
+}
+?>
+
+<div class="git-diff">
+    <?php
+
+    // generate unique blockId so that we can use this template several times on the same page without conflicts
+    $blockIdx = isset($GLOBALS['gitDiffBlockIdx']) ? ++$GLOBALS['gitDiffBlockIdx'] : $GLOBALS['gitDiffBlockIdx'] = 0;
+    if (!isset($collapseMode)) {
+        $collapseMode = 'auto';
+    }
+
+    foreach ($diff as $fileIndex => $fileDiff) {
+        $uniqFileId = $blockIdx . '_' . $fileIndex;
+        $isCollapsed = true;
+        $fileDiff->file = $simplifyFilePath($fileDiff->file);
+        if ($fileDiff->type == 'R') {
+            $fileDiff->renamedTo = $simplifyFilePath($fileDiff->renamedTo);
+        }
+        $fileOnclick = 'onmousedown="inst.fileMouseDown()"';
+        $fileOnclick .= 'onclick="inst.fileClick(' . var2htmlValue($uniqFileId) . ')"';
+        $resetFiles = $fileDiff->type !== 'R' ? array($fileDiff->file) : array($fileDiff->file, $fileDiff->renamedTo);
+        $resetButtonHtml = '<div class="reset"><button href="#" onclick="inst.resetFiles(' . var2htmlValue($resetFiles) . ',' . var2htmlValue($uniqFileId) . ', event)">reset file</button></div>';
+        echo "<div class=\"file\" $fileOnclick id=\"file_$uniqFileId\">";
+        if ($fileDiff->type === 'R') {
+            if (empty($fileDiff->diff)) {
+                $color = '#008800';
+            } else {
+                $color = '#0000aa';
+                $isCollapsed = false;
+            }
+            echo "<span style=\"color: #aa0000\">" . html2text($fileDiff->file) . '</span> -> <span style="color: ' . $color . '">' . '<b>' . html2text($fileDiff->renamedTo) . "</b></span>";
+            if (!$readOnly) {
+                echo $resetButtonHtml;
+            }
+        } else {
+            if ($fileDiff->type == 'M') {
+                $color = '#0000aa';
+                $isCollapsed = false;
+            }
+            if ($fileDiff->type == 'D') {
+                $color = '#aa0000';
+            }
+            if ($fileDiff->type == 'A') {
+                $color = '#008800';
+            }
+            echo "<span style=\"color: $color\"><b>" . html2text($fileDiff->file) . "</b></span>";
+            if (!$readOnly) {
+                echo $resetButtonHtml;
+            }
+        }
+        echo "</div>";
+        $htmlDiff = $getDiffHtml($fileDiff->diff);
+        $isCollapsed = $collapseMode === 'all' ? true : ($collapseMode === 'none' ? false : $isCollapsed);
+        echo "<div class=\"file-diff\" style=\"display: "
+            . ($isCollapsed ? 'none' : 'block') . "\" id=\"diff_$uniqFileId\">" . (trim($htmlDiff) !== '' ? $htmlDiff : '\\ No diff')
+            . "</div>";
+    }
+    ?>
+</div>

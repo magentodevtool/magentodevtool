@@ -1,0 +1,21 @@
+<?php
+
+$inst = \Projects::getInstallation($inst->source, $inst->project->name, $inst->name);
+$notes = $inst->deployment->getDeploymentNotes($deployment);
+
+?>
+<?php if (count($notes)) { ?>
+    <ul style="list-style: none; padding: 0; color: magenta;">
+        <?php foreach ($notes as $note): ?>
+            <li>
+                <img src="/app/skin/icon/notice.png" style="padding: 2px 4px 0 0; margin-bottom: -2px"/>
+                <?= $note ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <script type="application/javascript">
+        popup.lockOkButton(5);
+        $id('popup.button.cancel').focus();
+    </script>
+    <br>
+<?php } ?>

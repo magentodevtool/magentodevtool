@@ -1,0 +1,51 @@
+<?php
+
+$foreignKeys = $inst->execRaiScript('db/foreignKeys/getAll.php');
+if (!$foreignKeys) {
+    echo 'Error: ' . html2text($inst->execOutput);
+    return;
+}
+$foreignKeysTotals = $inst->getForeignKeysTotals($foreignKeys);
+
+?>
+
+Rows to update: <?= $foreignKeysTotals['toUpdate'] ?>,
+Rows to delete: <?= $foreignKeysTotals['toDelete'] ?>,
+<button style="margin-top: -2px; padding: 1px 10px" onclick="inst.foreignKeysFixAll()">Fix All</button>
+
+<br>
+<input type="checkbox" id="db.showConstraintNames" onchange="showHide('.db-foreign-keys-addl', this.checked)">
+<label for="db.showConstraintNames">Show constraint names</label>
+
+<table class="simple" border="1">
+    <tr>
+        <th>key</th>
+        <th>foreign key</th>
+        <th>on update</th>
+        <th>on delete</th>
+        <th>to update</th>
+        <th>to delete</th>
+        <th class="db-foreign-keys-addl">name</th>
+    </tr>
+    <?php foreach ($foreignKeys as $table => $columns) { ?>
+        <?php foreach ($columns as $column => $keys) { ?>
+            <?php foreach ($keys as $i => $key) { ?>
+                <tr>
+                    <?php if ($i === 0) { ?>
+                        <td rowspan="<?= count($keys) ?>"><?= html2text("$table.$column") ?></td>
+                    <?php } ?>
+                    <td><?= html2text($key->table . '.' . $key->column) ?></td>
+                    <td><?= html2text($key->onupdate) ?></td>
+                    <td><?= html2text($key->ondelete) ?></td>
+                    <td><?= html2text($key->to_update ? $key->to_update : '-') ?></td>
+                    <td><?= html2text($key->to_delete ? $key->to_delete : '-') ?></td>
+                    <td class="db-foreign-keys-addl"><?= html2text($key->constraint_name) ?></td>
+                </tr>
+            <?php } ?>
+        <?php } ?>
+    <?php } ?>
+</table>
+
+<script>
+    showHide('.db-foreign-keys-addl', false);
+</script>

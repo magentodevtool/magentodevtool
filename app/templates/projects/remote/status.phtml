@@ -1,0 +1,22 @@
+<?php
+try {
+    $isSynchronized = Projects\Remote::isSynchronized();
+} catch (Exception $exception) {
+}
+?>
+
+<?php if (isset($exception)) { ?>
+    <span style="color: red"><?= html2text($exception->getMessage()) ?></span>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$isSynchronized) { ?>
+    <span style="color: red">projects info is outdated</span> &nbsp;
+    <button onclick="projects.remote.synchronize()">Synchronize</button>
+<?php } else { ?>
+    <?php if (!file_exists(Projects\Remote::getFileAbsPath())) { ?>
+        <span style="color: red">
+            (no projects.json in "<?= html2text(Projects\Remote::getRepoUrl()) ?>" repository)
+        </span>
+    <?php } ?>
+<?php } ?>

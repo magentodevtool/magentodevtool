@@ -1,0 +1,17 @@
+<div class="console-description">
+    SQLite console to devtool database
+</div>
+
+<?= template('consoleTextarea') ?>
+
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'sqlite/runSql';
+        wrapResultInPre = false;
+        setValue(getPersistentVariable('lastSqliteQueries'));
+        setMode('text/x-sql');
+        beforeSubmit = function () {
+            setPersistentVariable('lastSqliteQueries', getValue());
+        }
+    }
+</script>

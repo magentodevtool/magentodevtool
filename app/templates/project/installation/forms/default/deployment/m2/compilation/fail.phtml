@@ -1,0 +1,7 @@
+<div>
+    <?= html2text($exception->getMessage()) ?><br>
+    <button onclick="deployment.retry()">Try again</button>
+</div>
+<script>
+    window.isM2CompilationInProgress = false;
+</script>

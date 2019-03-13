@@ -1,0 +1,22 @@
+<?php
+if (preg_match_all('~live~i', $inst->name, $matches)) {
+    ?>
+    <span style="color:red;">Forbidden on Live.</span>
+    <?php return;
+}
+?>
+<span>Make sure following files are in place and are readable for web-server:
+    <ul>
+        <li>var/attributes.csv</li>
+        <li>var/attribute_sets.csv</li>
+    </ul>
+</span>
+<br/>
+<button id="import_btn"
+        style="width: 160px; margin-top: 5px;"
+        onclick="inst.importAttributesDialog()">
+    Import Attributes
+</button>
+<span style="margin-left: 10px" id="loading"></span>
+
+<div id="response" style="margin-top: 10px"></div>

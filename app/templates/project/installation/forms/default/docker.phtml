@@ -1,0 +1,211 @@
+<?php
+/** @var \Project\Installation $inst */
+
+if ($inst->webServer->type !== 'docker') { ?>
+    Not supported for server type <strong><?= $inst->webServer->type ?></strong>
+    <?php return; ?>
+<?php } ?>
+
+<table>
+    <tr>
+        <td>
+            <button
+                    style="width: 100%"
+                    onclick="dockerComposeList();"
+            >List services
+            </button>
+        </td>
+        <td>List services registered in docker-compose.yml</td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerComposePs();"
+            >List containers
+            </button>
+        </td>
+        <td>List containers (<strong>docker-compose ps</strong> command)</td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerComposeUp();"
+            >Up
+            </button>
+        </td>
+        <td>Builds, (re)creates, and starts containers (<strong>docker-compose up -d</strong> command)</td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerComposeStop();"
+            >Stop
+            </button>
+        </td>
+        <td>Stop running containers (<strong>docker-compose stop</strong> command)</td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerComposeRecreate();"
+            >Recreate
+            </button>
+        </td>
+        <td>Builds, recreates, and starts containers (<strong>docker-compose up -d --force-recreate</strong>
+            command)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerComposeDown();"
+            >Down
+            </button>
+        </td>
+        <td>Stops containers and removes containers, networks, volumes, and images created by up
+            (<strong>docker-compose down --rmi local -v --remove-orphans</strong> command)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerStopAll();"
+            >Stop All
+            </button>
+        </td>
+        <td>Stops all Docker containers (<strong>docker stop $(docker ps -q)</strong> command)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button
+                    style="width:  100%"
+                    onclick="dockerCleanup();"
+            >Clean up
+            </button>
+        </td>
+        <td>Removes all exited containers and dangling images
+            <ul>
+                <li><strong>docker rm -v $(docker ps -a -q -f status=exited -f status=created)</strong></li>
+                <li><strong>docker rmi $(docker images -f "dangling=true" -q)</strong></li>
+                <li><strong>docker volume rm $(docker volume ls -qf dangling=true)</strong></li>
+            </ul>
+
+        </td>
+    </tr>
+</table>
+<div id="docker.result"></div>
+
+<script type="application/javascript">
+
+    dockerComposeList = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposeList',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerComposePs = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposePs',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerComposeUp = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposeUp',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerComposeStop = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposeStop',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerComposeDown = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposeDown',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerComposeRecreate = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerComposeRecreate',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerStopAll = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerStopAll',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+    dockerCleanup = function () {
+
+        var resultDiv = $id('docker.result');
+
+        inst.action(
+            'docker/dockerCleanup',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    };
+
+</script>

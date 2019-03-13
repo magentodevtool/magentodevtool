@@ -1,0 +1,7 @@
+Failed to restore all base files, following files should be restored manually:
+<ul>
+    <?php foreach ($inst->getMissingBaseFiles() as $file) { ?>
+        <li><?= html2text($file) ?></li>
+    <?php } ?>
+</ul>
+<?= $inst->getContinueButton() ?>

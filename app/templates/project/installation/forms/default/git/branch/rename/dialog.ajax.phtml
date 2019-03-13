@@ -1,0 +1,26 @@
+<span>
+    Rename branch <b><?= html2text($branchName) ?></b> to:
+</span>
+<input
+        type="hidden"
+        name="currentName"
+        value="<?= html2text($branchName) ?>"
+/>
+<br/>
+<input
+        class="wide"
+        name="newName"
+        id="newBranchName"
+        value="<?= html2text($branchName) ?>"
+        onkeyup="if(event.keyCode==13) $id('popup.button.ok').click()"
+/>
+<br/>
+<button
+        class="wide"
+        onclick="inst.adjustBranchName('newBranchName')"
+>
+    Adjust name
+</button>
+<script>
+    $id('newBranchName').focus();
+</script>

@@ -1,0 +1,50 @@
+<table id="dbSearchForm">
+    <tr>
+        <td>
+            Table name rx
+        </td>
+        <td>
+            <input name="table_name_rx" value="" onkeypress="if(event.keyCode===13) inst.dbSearch()">
+            ==
+            <select name="table_name_rx_cond">
+                <option value="1">true</option>
+                <option value="0">false</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Field name rx
+        </td>
+        <td>
+            <input name="field_name_rx" value="" onkeypress="if(event.keyCode===13) inst.dbSearch()">
+            ==
+            <select name="field_name_rx_cond">
+                <option value="1">true</option>
+                <option value="0">false</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Field value rx
+        </td>
+        <td>
+            <input name="field_value_rx" value="" onkeypress="if(event.keyCode===13) inst.dbSearch()">
+            ==
+            <select name="field_value_rx_cond">
+                <option value="1">true</option>
+                <option value="0">false</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button onclick="inst.dbSearch()">Search</button>
+        </td>
+    </tr>
+</table>
+
+<div id="dbSearchResult"></div>
+

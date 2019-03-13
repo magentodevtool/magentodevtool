@@ -1,0 +1,17 @@
+<?=
+template('navigation/tabs',
+    array(
+        'tabs' => array(
+            'links' => 'Links',
+            'git.local' => 'Git',
+            'database.local' => 'Database',
+            'depins' => 'Instructions',
+            'flushCaches' => 'Flush caches',
+            'more.local' => 'More..',
+        )
+    )
+)
+?>
+<script type="application/javascript">
+    inst.tabClick('git.local');
+</script>

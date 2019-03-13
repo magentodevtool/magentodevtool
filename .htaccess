@@ -1,0 +1,11 @@
+php_flag display_errors 1
+php_flag short_open_tag 1
+php_flag html_errors 0
+php_value error_reporting 30719
+php_value max_execution_time 0
+php_value max_input_time -1
+php_value memory_limit -1
+
+# Disable APC
+php_value apc.enabled 0
+php_flag apc.cache_by_default 0

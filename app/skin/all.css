@@ -1,0 +1,960 @@
+body {
+    margin-top: 11px;
+    font-family: "Times New Roman", Helvetica, Arial, sans-serif;
+}
+
+a, a:visited {
+    color: #0000EE;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.header-title {
+    font-size: 25px;
+    color: black;
+    font-weight: bold;
+}
+
+.content {
+    padding: 5px;
+}
+
+input, select {
+    border-style: solid;
+    border: 1px solid;
+    border-color: white white darkblue white;
+    outline: none;
+    background-color: white;
+}
+
+input.wide, select.wide {
+    width: 400px;
+}
+
+table.form td {
+    padding-right: 15px;
+}
+
+.progressbar {
+    width: 398px;
+    height: 18px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7a7a7a #f4f4f4 #f4f4f4 #7a7a7a;
+    background-color: #ddd;
+}
+
+.progress {
+    width: 0;
+    height: 100%;
+    background-color: #83b367;
+    color: white;
+}
+
+.progress span {
+    margin-left: 20px;
+}
+
+textarea.commands {
+    width: 100%;
+    border: 0px;
+    background-color: black;
+    color: white;
+}
+
+div.commands {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-family: monospace;
+    margin-bottom: 4px;
+}
+
+table.projects {
+    margin-top: 10px;
+}
+
+table.projects td, table.projects td .installation {
+    padding-right: 16px;
+    height: 20px;
+}
+
+ul {
+    margin: 0;
+}
+
+.tabs {
+    margin: 7px 0 10px 0;
+}
+
+.tabs .tab, .tabs .tab-active, .tabs .tab-left, .tabs .tab-right {
+    float: left;
+    padding: 5px 20px;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+.tabs .tab-left, .tabs .tab-right {
+    padding: 5px;
+}
+
+.tabs .tab-right {
+    width: 10px;
+}
+
+.tabs a {
+    color: black;
+    text-decoration: none;
+}
+
+.tabs .tab, .tabs .tab-left, .tabs .tab-right {
+    border-width: 0 0 1px 0;
+}
+
+.tabs .tab a, .tabs .tab-left a, .tabs .tab-right a {
+    padding: 1px 1px 0 1px;
+}
+
+.tabs .tab-active {
+    border-width: 1px 1px 0 1px;
+}
+
+.tabs .tab-active a {
+    padding: 0 0 1px 0;
+}
+
+.tabs-after {
+    clear: both;
+    height: 12px;
+}
+
+#cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0;
+    display: none;
+    z-index: 999;
+}
+
+.left-links {
+    vertical-align: top;
+    padding-right: 50px
+}
+
+.left-links a {
+    color: #6a6a6a;
+    white-space: nowrap;
+}
+
+.left-links li a.active {
+    color: #000000;
+}
+
+.left-links ul {
+    list-style-type: none;
+    padding-left: 15px;
+}
+
+.left-links > ul > li > a {
+    display: block;
+    width: 100%;
+}
+
+.left-links > ul > li > ul {
+    white-space: nowrap;
+    padding-left: 0;
+}
+
+.left-links > ul > li > ul li:before {
+    content: '⇢';
+    display: inline-block;
+    margin-right: 2px;
+    color: #d6d6d6;
+    white-space: nowrap;
+    font-size: 19px;
+    line-height: 18px;
+    position: relative;
+    top: 1px;
+}
+
+#linkContent {
+    vertical-align: top;
+    width: 100%;
+}
+
+table.list {
+    border-spacing: 0;
+}
+
+table.list th {
+    text-align: left;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+}
+
+table.list td {
+    padding-right: 50px;
+    vertical-align: top;
+}
+
+.error {
+    white-space: pre;
+    color: Red;
+}
+
+.warning {
+    white-space: pre;
+    color: #F96804;
+}
+
+.connection-string-container {
+    display: inline-block;
+    margin-left: 45px;
+    margin-top: -20px;
+}
+
+.connection-string-switcher span {
+    font-size: 12px;
+    padding: 0 3px;
+    cursor: default;
+    display: inline-block;
+    margin-bottom: -1px;
+    border-width: 1px 1px 0 1px;
+    border-color: white;
+    border-style: solid;
+}
+
+.connection-string-switcher .active {
+    border-color: darkgray;
+}
+
+.connection-string {
+    padding-left: 3px;
+    border: 0;
+    width: 570px;
+    color: white;
+    background-color: black;
+    overflow: hidden;
+    font-size: 12px;
+    z-index: 9999;
+    position: relative;
+    resize: none;
+    margin-top: 0px;
+    float: left;
+}
+
+#git-modifications {
+    padding-top: 20px;
+}
+
+#modificationsForm {
+    padding: 5px;
+}
+
+#consoleResult table, table.simple {
+    border-spacing: 0;
+    border-collapse: collapse;
+    border-color: #d5d5d5;
+}
+
+#consoleResult table th, table.simple th {
+    padding: 4px;
+}
+
+#consoleResult table td, #consoleResult table th, table.simple td, table.simple th {
+    padding: 0 3px;
+    white-space: pre;
+    vertical-align: top;
+}
+
+.git-diff .file {
+    background-color: #ddd;
+    cursor: default;
+    margin-bottom: 1px;
+    padding-top: 1px;
+    padding-left: 3px;
+}
+
+.git-diff-file-modes, .git-diff-file-lines {
+    font-size: 13px;
+    line-height: 15px;
+    white-space: pre;
+    font-family: monospace;
+}
+
+.git-diff-file-modes {
+    float: left;
+}
+
+#codeReviewResult .branch {
+    background-image: url("/app/skin/icon/git/branch.png");
+    background-repeat: no-repeat;
+    font-weight: bold;
+    cursor: default;
+    margin-bottom: 1px;
+    padding: 2px 0 2px 30px;
+}
+
+#codeReviewResult .branch-diff {
+    margin-bottom: 10px;
+}
+
+#codeReviewResult {
+    margin-top: 10px;
+}
+
+.file-diff {
+    width: 100px;
+}
+
+.file .reset {
+    float: right;
+    margin-right: 8px;
+}
+
+.file .reset button {
+    color: #bb0000;
+    margin-top: -1px;
+    height: 20px;
+}
+
+.installations {
+    position: relative;
+    font-size: 13px;
+    top: -7px;
+    padding-left: 43px;
+}
+
+.installations .current a {
+    color: black;
+}
+
+.installations .other a {
+    color: gray;
+}
+
+.file-diff .break {
+    line-height: 15px;
+    font-family: monospace;
+    color: #808080;
+}
+
+button.compact {
+    margin: 0;
+    padding: 0 5px;
+}
+
+.edit, .delete, .info-icon, .download-icon {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-left: 8px;
+}
+
+.download-icon {
+    background-image: url("/app/skin/icon/download.png");
+}
+
+.info-icon {
+    background-image: url("/app/skin/icon/info.png");
+}
+
+.edit {
+    background-image: url("/app/skin/icon/edit.png");
+}
+
+.delete {
+    background-image: url("/app/skin/icon/delete.png");
+}
+
+.firefox-notice {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    background: rgba(255, 216, 23, 0.73);
+    padding: 2px 10px;
+    max-width: 75%;
+    font-size: 14px;
+    border-radius: 3px
+}
+
+.firefox-notice div {
+    color: black !important;
+    font-weight: normal !important;
+}
+
+.installation-activity {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #ff6f09;
+    border-radius: 4px;
+    margin-right: 0px;
+    visibility: hidden;
+}
+
+/* cherry-pick... */
+
+.datagrid table {
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.datagrid {
+    font: normal 12px/150% Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+.datagrid table td, .datagrid table th {
+    padding: 3px 10px;
+}
+
+.datagrid table thead th {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #8C8C8C), color-stop(1, #7D7D7D));
+    background: -moz-linear-gradient(center top, #8C8C8C 5%, #7D7D7D 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C8C8C', endColorstr='#7D7D7D');
+    background-color: #8C8C8C;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    border-left: 1px solid #A3A3A3;
+}
+
+.datagrid table thead th:first-child {
+    border: none;
+}
+
+.datagrid table tbody td {
+    color: #7D7D7D;
+    border-left: 1px solid #DBDBDB;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.datagrid table tbody .alt td {
+    background: #EBEBEB;
+    color: #7D7D7D;
+}
+
+.datagrid table tbody td:first-child {
+    border-left: none;
+}
+
+.datagrid table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ac-container {
+    margin: 15px 0;
+    text-align: left;
+    display: table;
+}
+
+.ac-container label.accordion {
+    padding: 0 10px;
+    position: relative;
+    z-index: 20;
+    display: block;
+    height: 30px;
+    cursor: pointer;
+    color: #555;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    line-height: 30px;
+    font-size: 16px;
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 1%, #eaeaea 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #ffffff), color-stop(100%, #eaeaea));
+    background: -webkit-linear-gradient(top, #ffffff 1%, #eaeaea 100%);
+    background: -o-linear-gradient(top, #ffffff 1%, #eaeaea 100%);
+    background: -ms-linear-gradient(top, #ffffff 1%, #eaeaea 100%);
+    background: linear-gradient(top, #ffffff 1%, #eaeaea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eaeaea', GradientType=0);
+    box-shadow: 0px 0px 0px 1px rgba(155, 155, 155, 0.3), 1px 0px 0px 0px rgba(255, 255, 255, 0.9) inset, 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ac-container label.accordion:hover {
+    background: #fff;
+}
+
+.ac-container input.accordion:checked + label.accordion,
+.ac-container input.accordion:checked + label.accordion:hover {
+    background: #999;
+    color: #333;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.6);
+    box-shadow: 0px 0px 0px 1px rgba(155, 155, 155, 0.3), 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ac-container label.accordion:hover:after,
+.ac-container input.accordion:checked + label.accordion:hover:after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: 13px;
+    top: 7px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAABHNCSVQICAgIfAhkiAAAADFJREFUCJljPHPmDAMDAwODiYnJfwYcgAnGOHPmDCM2BWfOnGFkQhfAxkdRhCyBrAEAJtMSZQJxS8kAAAAASUVORK5CYII=);
+    background-repeat: no-repeat;
+    background-position: 0 6px;
+}
+
+.ac-container input.accordion:checked + label.accordion:hover:after {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAECAYAAABcDxXOAAAABHNCSVQICAgIfAhkiAAAAC5JREFUCJljPHPmDAMMmJiY/D9z5gwjAxpgQlaATGMoQpdA5zMyMDBg6IQBmNUAjkQQOwShQQEAAAAASUVORK5CYII=);
+    background-repeat: no-repeat;
+    background-position: 0 6px;
+}
+
+.ac-container input.accordion {
+    display: none;
+}
+
+.ac-container article {
+    background: rgba(255, 255, 255, 0.5);
+    margin-top: -1px;
+    overflow: hidden;
+    height: 0px;
+    position: relative;
+    z-index: 10;
+    -webkit-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+    -moz-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+    -o-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+    -ms-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+    transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+}
+
+.ac-container article p {
+    color: #333;
+    line-height: 23px;
+    font-size: 14px;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    margin: 5px 0;
+}
+
+.ac-container input.accordion:checked + label + article {
+    height: auto;
+}
+
+.ac-container .comment, .ac-container .comment-additional {
+    white-space: pre;
+}
+
+.ac-container .comment-additional {
+    color: gray;
+}
+
+/* cherry-pick... */
+
+/* deployed-changes... */
+
+.deployed-changes {
+    padding: 15px 0;
+    border: 0;
+}
+
+.deployed-changes tr td {
+    padding-left: 10px;
+}
+
+.deployed-changes tr td:first-child {
+    padding-left: 0;
+    padding-right: 10px;
+    border-right: 1px solid #808080;
+}
+
+.deployed-changes .change-type-A {
+    color: #008800;
+}
+
+.deployed-changes .change-type-M {
+    color: #0000aa;
+}
+
+.deployed-changes .change-type-D {
+    color: #aa0000;
+}
+
+.deployed-changes .change-type-NOTICE {
+    color: #ff6f09;
+}
+
+/* deployed-changes. */
+
+/* Git changelist... */
+
+.hash {
+    color: red;
+}
+
+.references-names {
+    background: none repeat scroll 0 0 rgba(255, 216, 23, 0.73);
+    color: black;
+}
+
+.subject {
+    color: green;
+}
+
+.author-name {
+    color: DodgerBlue;
+}
+
+/* Git changelist. */
+
+.info {
+    color: #aaaaaa;
+    font-size: small;
+    padding: 0;
+    margin: 0;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.inline div, .inline input {
+    display: inherit;
+}
+
+pre {
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    -webkit-tab-size: 4;
+    -ms-tab-size: 4;
+    tab-size: 4;
+}
+
+#branchForm table td {
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#branchForm tr.branch-line:hover td {
+    background-color: whitesmoke;
+}
+
+#branchForm table button {
+    background-position: 1px 1px;
+    width: 26px;
+    height: 26px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background-color: white;
+    background-repeat: no-repeat;
+    padding: 0;
+    cursor: pointer;
+    background-color: transparent;
+    display: block;
+    float: left;
+}
+
+#branchForm table button:hover {
+    border-color: #cccccc;
+}
+
+#branchForm table button:focus {
+    outline: none;
+}
+
+#branchForm table button:disabled {
+    opacity: 0.2;
+    border-color: transparent;
+    cursor: default;
+}
+
+#branchForm table button.pull {
+    background-image: url('/app/skin/icon/branch/pull.png');
+}
+
+#branchForm table button.push {
+    background-image: url('/app/skin/icon/branch/push.png');
+}
+
+#branchForm table button.update-from-master {
+    background-image: url('/app/skin/icon/branch/update-from-master.png');
+}
+
+#branchForm table button.cherry-pick {
+    background-image: url('/app/skin/icon/branch/cherry-pick.png');
+}
+
+#branchForm table button.rename {
+    background-image: url('/app/skin/icon/branch/rename.png');
+}
+
+#branchForm table button.remove {
+    background-image: url('/app/skin/icon/branch/delete.png');
+}
+
+.consoleTable {
+    /*width: 98%;*/
+    width: 90%;
+}
+
+#console-hint {
+    width: 200px;
+    height: 35px;
+    border: 1px solid #CCA643;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 35px;
+    position: fixed;
+    right: 15px;
+    bottom: -200px;
+    opacity: 0;
+    background: #FEEFB3;
+    color: #802503;
+    transition: opacity 1s ease-out, bottom 0.5s ease-out;
+}
+
+#console-hint:after {
+    top: 100%;
+    left: 80%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #CCA643;
+    border-width: 8px;
+}
+
+#console-hint.show {
+    opacity: 1;
+    bottom: 15px;
+    transition: opacity 0.2s ease-in, bottom 0.2s;
+}
+
+#dbTablesContainer {
+    max-height: 400px;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+
+#dbTables, .console-all-tables {
+    border: solid 1px #ccc;
+    font-size: small;
+    width: 100%;
+}
+
+#dbTables tr:nth-child(odd) {
+    background-color: #e5e5e5;
+}
+
+#dbTables th {
+    text-align: center;
+}
+
+.console-all-tables a {
+    color: black;
+    font-size: 15px;
+}
+
+#continueDbTablesButton {
+    margin-top: 10px;
+}
+
+#importMediaForm label span {
+    color: #808080;
+}
+
+#importMediaForm .file {
+    color: #808080;
+}
+
+#importMediaForm .file label {
+    color: rgb(128, 128, 128);
+}
+
+#projectsInfo tr td {
+    padding: 0px 20px 4px 0px;
+    white-space: nowrap;
+}
+
+#projectsInfo tr:nth-child(odd) {
+    background: #e5e5e5
+}
+
+.progress-block {
+    float: left;
+    width: 6px;
+    height: 14px;
+    margin-left: 3px;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #00900b;
+    border-color: #00900b;
+    border-right-color: #00580b;
+    border-bottom-color: #00580b;
+    opacity: 0.7;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: linear;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-direction: linear;
+}
+
+.environment-alpha .progress-block {
+    background-color: #345bf1;
+    border-color: #345bf1;
+    border-right-color: #3055e0;
+    border-bottom-color: #3055e0;
+}
+
+.environment-beta .progress-block {
+    background-color: #e900f2;
+    border-color: #e900f2;
+    border-right-color: #d400dd;
+    border-bottom-color: #d400dd;
+}
+
+.environment-live .progress-block {
+    background-color: #f20000;
+    border-color: #f20000;
+    border-right-color: #c80000;
+    border-bottom-color: #c80000;
+}
+
+#progress-block-2 {
+    -webkit-animation-delay: 0.1s;
+    -moz-animation-delay: 0.1s;
+}
+
+#progress-block-3 {
+    -webkit-animation-delay: 0.2s;
+    -moz-animation-delay: 0.2s;
+}
+
+@-webkit-keyframes progressAnimation {
+    0% {
+        -webkit-transform: scale(1, 1.8);
+        opacity: 1
+    }
+    100% {
+        -webkit-transform: scale(1, 1);
+        opacity: 0.5
+    }
+}
+
+@-moz-keyframes progressAnimation {
+    0% {
+        -moz-transform: scale(1, 1.8);
+        opacity: 1
+    }
+    100% {
+        -moz-transform: scale(1, 1);
+        opacity: 0.3
+    }
+}
+
+.ajax-progress-active .progress-block {
+    -webkit-animation-name: progressAnimation;
+    -moz-animation-name: progressAnimation;
+}
+
+.db-foreign-keys-addl {
+    color: gray;
+}
+
+#deployment-custom-notes, #deployment-custom-notes-show {
+    padding: 0 0 7px 15px;
+}
+
+#deployment-custom-notes-show a {
+    background-color: #fff7c3;
+    color: #D400DD;
+}
+
+#deployment-custom-notes ul {
+    padding: 0;
+}
+
+#deployment-custom-notes ul li {
+    white-space: pre;
+    background: url(/app/skin/icon/notice.png) no-repeat left top;
+    padding: 0 0 7px 23px;
+    list-style: none;
+    color: magenta;
+}
+
+#deployment-custom-notes button + span {
+    color: gray;
+}
+
+.deployment-custom-notes-container {
+    margin-left: -5px;
+}
+
+div.CodeMirror {
+    border-color: #777 #ddd #ddd #777;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.note {
+    color: #d500d5;
+}
+
+.console-top-menu a {
+    color: #232323;
+    text-decoration: none;
+}
+
+.console-hotkeys-table td {
+    white-space: nowrap;
+}
+
+.console-description {
+    color: gray;
+}
+
+.installation .label, .installations .label {
+    color: gray;
+}
+
+.installation.build a {
+    color: gray;
+}
+
+#selectAllLabel {
+    text-decoration: underline;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cm-s-default .cm-comment {
+    color: rgba(192, 99, 0, 0.73);
+}
+
+.cm-s-default .cm-keyword {
+    font-weight: bold;
+}
+
+.cm-s-default .cm-atom {
+    color: black;
+    text-decoration: underline;
+}
+
+.cm-zeroline {
+    color: #9a9a9a;
+    text-decoration: line-through;
+}

@@ -1,0 +1,26 @@
+<?php if ($error) { ?>
+    <div>
+        composing modules..<br>
+        <span class="error"><?= html2text($error) ?></span><br/>
+        <button onclick="deployment.retry()">Try again</button>
+    </div>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$isAvailable) { ?>
+    <div>
+        composing modules.. not available
+    </div>
+<?php } elseif ($nothingToInstall) { ?>
+    <div>
+        composing modules.. nothing to install
+    </div>
+<?php } elseif ($nothingToCommit) { ?>
+    <div>
+        composing modules.. nothing to commit
+    </div>
+<?php } ?>
+
+<script>
+    deployment.continue()
+</script>

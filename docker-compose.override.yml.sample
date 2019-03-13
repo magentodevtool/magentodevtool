@@ -1,0 +1,14 @@
+
+version: '2'
+
+services:
+
+  devtool:
+    # make devtool container be run when Docker daemon starts
+    restart: always
+#    environment:
+# Enable XDebug extension for
+#      - WITH_XDEBUG=1
+# Specify another linux user, useful if you run devtool in a VM
+#      - DEVTOOL_USER=[user]
+

@@ -1,0 +1,16 @@
+<div>
+    <table>
+        <tr>
+            <th style="text-align: center;">Tables</th>
+        </tr>
+        <?php foreach ($info->tables as $tableName => $tableValue) { ?>
+            <tr>
+                <td>
+                    <span style="<?= ($tableValue) ? '' : 'text-decoration: line-through; color: gray' ?>">
+                        <?= html2text($tableName) ?>
+                    </span>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<?= template('page/head') ?>
+<body class="<?= page()->bodyClass ?>">
+<script type="application/javascript">
+    favicon = new Favicon();
+    favicon.setStatusCalm();
+</script>
+<div id="cover"></div>
+<div class="content">
+    <?php if (preg_match('~firefox~i', $_SERVER['HTTP_USER_AGENT'])) { ?>
+        <div class="firefox-notice">
+            <?=
+            template(
+                'message/notice',
+                array(
+                    'message' => "Application is best tested in Chrome browser, if something doesn't work try Google Chrome."
+                )
+            );
+            ?>
+        </div>
+    <?php } ?>
+    <?= template(page()->viewTemplate) ?>
+</div>
+<?= template('popup') ?>
+<?= template('consoleHint') ?>
+</body>
+</html>

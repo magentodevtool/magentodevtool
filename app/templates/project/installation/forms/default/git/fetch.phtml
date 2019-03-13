@@ -1,0 +1,9 @@
+<?php
+try {
+    $inst->git->fetch();
+} catch (Exception $e) { ?>
+    <div style="color: #e95b0e">
+        <b>git fetch failed with error:</b><br><?= nl2br(html2text($e->getMessage())) ?>
+    </div>
+    <br>
+<?php } ?>

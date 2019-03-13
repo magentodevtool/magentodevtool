@@ -1,0 +1,31 @@
+<ul style="list-style-type: none; padding: 0;">
+    <li class="datagrid">
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Command</th>
+                <th>Error</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($commands as $command) { ?>
+                <tr>
+                    <td><?= $command['cmd'] ?></td>
+                    <td>
+                        <?php if (isset($command['error'])) { ?>
+                            <pre style="color: red;"><?= htmlspecialchars(trim($command['error'])) ?></pre>
+                        <?php } else { ?>
+                            <pre style="color: green;">Success</pre>
+                        <?php } ?>
+                    </td>
+                    <td><?= $command['status'] ?></td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </li>
+    <?php if ($dontCommit && !isset($command['error'])) { ?>
+        <li style="color: orange;">Result was not commited, please check Modifications tab</li>
+    <?php } ?>
+</ul>

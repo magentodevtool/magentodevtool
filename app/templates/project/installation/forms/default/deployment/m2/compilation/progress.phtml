@@ -1,0 +1,45 @@
+<?php /** @var array $toDo */ ?>
+<div class="m2-compilation-progress-container">
+    <table>
+        <?php foreach ($toDo as $key => $command) { ?>
+            <tr>
+                <td style="padding-left: 20px"><?= $command ?></td>
+                <td
+                        class="process-status-<?= html2text($key) ?>"
+                        style="padding-left: 20px"
+                ></td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+
+<script>
+
+    function m2CompilationUpdateStatus() {
+        deployment.action(
+            'm2/compilation/status/get',
+            function (status) {
+                if (window.isM2CompilationInProgress) {
+                    setTimeout(m2CompilationUpdateStatus, 3000);
+                }
+                if (!status) return;
+                status.foreach(function (k, v) {
+                    var statusElements = $$('.m2-compilation-progress-container .process-status-' + k);
+                    // take last one in case of 'try again'
+                    var statusElement = statusElements[statusElements.length - 1];
+                    var color = 'black';
+                    if (v === 'done') color = 'green';
+                    if (v === 'pending') color = 'gray';
+                    statusElement.innerHTML = html2text(v);
+                    statusElement.style.color = color;
+                });
+            },
+            false
+        );
+    }
+
+    window.isM2CompilationInProgress = true;
+    setTimeout(m2CompilationUpdateStatus, 3000);
+    deployment.continue();
+
+</script>

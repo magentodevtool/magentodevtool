@@ -1,0 +1,12 @@
+You shall manually update <?= /** @var \Project\Installation $inst */
+$inst->getDockerPackageName() ?> package:
+<pre>
+    <?= html2text(cmd('cd %s ', $inst->_appRoot) . ' && \\' . PHP_EOL) ?>
+    <?= html2text(cmd(
+            'composer require --dev %s:%s',
+            $inst->getDockerPackageName(),
+            $inst->getDockerPackageVersion()
+        ) . ' && \\' . PHP_EOL) ?>
+    <?= html2text(cmd('composer install')) ?>
+</pre>
+<?= $inst->getContinueButton() ?>

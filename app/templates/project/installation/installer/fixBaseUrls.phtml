@@ -1,0 +1,7 @@
+Failed to fix base urls, fix following domains manually
+<ul>
+    <?php foreach ($inst->getBaseURLDomainsToReplace() as $domain) { ?>
+        <li><?= html2text($domain) ?></li>
+    <?php } ?>
+</ul>
+<?= $inst->getContinueButton() ?>

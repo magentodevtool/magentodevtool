@@ -1,0 +1,37 @@
+<a href="javascript:addProject();">Add project</a>
+<div>
+    <div id="addProjectForm" style="display: none;  margin-top: 5px">
+        <table class="form">
+            <tr>
+                <td>Name</td>
+                <td><input class="wide" name="name"/></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>
+                    <select class="wide" name="type"
+                            id="project.form.type"
+                            onchange="onProjectTypeChange()"
+                    >
+                        <option value="magento1">Magento</option>
+                        <option value="simple">Simple</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Git repository</td>
+                <td><input class="wide" name="repository[url]"/></td>
+            </tr>
+            <tr id="project.form.docRoot">
+                <td>Document root</td>
+                <td><input class="wide" name="repository[docRoot]"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button onclick="projectSave()">Save</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

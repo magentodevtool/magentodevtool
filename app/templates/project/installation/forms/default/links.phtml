@@ -1,0 +1,61 @@
+<?php
+$linksInfo = $inst->magento->getLinksInfo();
+$errorHtml = false;
+if (!$linksInfo) {
+    $errorHtml = '
+        Failed to get links
+        <br>Check ssh access to the remote.
+    ';
+} elseif (!empty($linksInfo->mainDomain) && $inst->domain !== $linksInfo->mainDomain) {
+    $errorHtml = 'Seems that main domain is incorrect, it should be <b>' . html2text($linksInfo->mainDomain) . '</b>'
+        . ' but not <b>' . html2text($inst->domain) . '</b>, fix it in projects.json';
+    if ($inst->type === 'local') {
+        $errorHtml .= " or in BO->System->Configuration->Web";
+    }
+} elseif (!isset($linksInfo->list)) {
+    $errorHtml = '
+        Failed to get links
+        <br>Check if there is no http auth for remote domain. If "GET http://' . $inst->domain . '/zdevtool/" asks you auth then ask sysadmin to skip auth for this folder.
+        <br>Check if Magento is accessible by URL http://' . html2text($inst->domain) . ' and it works.
+    ';
+}
+?>
+
+<?php if ($errorHtml) { ?>
+    <div style="color: red; text-align: center">
+        <?= $errorHtml ?>
+    </div>
+    <?php return ?>
+<?php } ?>
+
+<div style="position: fixed; right:20px; margin-top: -8px;">
+    Checked <b><?= \getDateAgo($linksInfo->date) ?></b> ago,
+    <button onclick="inst.refreshLinks()">Refresh</button>
+</div>
+
+<table class="list" style="padding-left: 25px">
+    <tr>
+        <th>Link</th>
+        <th>Stores</th>
+    </tr>
+    <?php foreach ($linksInfo->list as $link => $linkStores) { ?>
+        <tr>
+            <td style="white-space: nowrap; vertical-align: top"><a
+                        href="<?= html2text($link) ?>"><?= html2text($link) ?></a></td>
+            <td><?= html2text(implode(', ', $linkStores)) ?>
+                <?php if (in_array('admin', $linkStores)) { ?>
+                    &nbsp;
+                    <a href="/?view=magento/autologin/bo&source=<?= urlencode($inst->source) ?>&project=<?= urlencode($inst->project->name) ?>&name=<?= urlencode($inst->name) ?>">
+                        Auto log in
+                    </a>
+                <?php } elseif ($inst->project->type === 'magento1') { ?>
+                    &nbsp;
+                    <a href="/?view=magento/autologin/fe&source=<?= urlencode($inst->source) ?>&project=<?= urlencode($inst->project->name) ?>&name=<?= urlencode($inst->name) ?>&feUrl=<?= html2text($link) ?>&urlStores=<?= html2text(implode(',',
+                        $linkStores)) ?>">
+                        Auto log in
+                    </a>
+                <?php } ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

@@ -1,0 +1,17 @@
+<?php
+if (!$inst = \Projects::getInstallation($_GET['source'], $_GET['project'], $_GET['name'])) {
+    echo "Installation not found";
+    return;
+}
+
+if (!$boUrl = $inst->magento->getBoLink()) {
+    echo "Failed to get BO link";
+    return;
+}
+?>
+Auto log in to <?= html2text($_GET['project']) ?> / <?= html2text($_GET['name']) ?> back-office..
+<script type="application/javascript" src="/app/js/installation.js?v=<?= time() ?>"></script>
+<script type="application/javascript">
+    inst = new Installation(<?=$inst->getDataJson()?>);
+    inst.autoLogin(<?= json_encode($boUrl) ?>);
+</script>

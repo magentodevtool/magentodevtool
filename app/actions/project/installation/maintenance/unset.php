@@ -1,0 +1,3 @@
+<?php
+
+$inst->maintenance->turnOff();

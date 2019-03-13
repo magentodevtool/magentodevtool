@@ -1,0 +1,13 @@
+<br>
+<br>
+
+<div style="color: #d74a00; font-weight: bold; margin-bottom: 10px">
+    Following instruction<?= count($depins) > 1 ? 's' : '' ?> must be done before deployment:
+</div>
+
+<?php foreach ($depins as $depin) { ?>
+    <b><?= html2text($depin['name']) ?></b>
+    <pre style="background-color: #e5e5e5; margin: 0 0 10px 0"><?= html2text($depin['content']) ?></pre>
+<?php } ?>
+
+<button onclick="deployment.continue()">Done, continue</button>

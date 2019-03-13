@@ -1,0 +1,43 @@
+<?php
+$m2Mode = $inst->spf('mage/getM2Mode');
+$diEnabled = $m2Mode === 'developer';
+$staticContentEnabled = $m2Mode === 'developer';
+?>
+<script type="application/javascript">
+    onFlushModeChange = function () {
+        $id('flushOptions').style.display = $id('flushSpecific').checked ? 'block' : 'none';
+    }
+</script>
+<div id="flushCacheForm">
+    <input name="mode" value="all" type="radio" id="flushAll" checked="checked" onchange="onFlushModeChange()"/>
+    <label for="flushAll"><b>All</b> <span style="font-size: 14px">(except static content)</span></label>
+    <br>
+    <input name="mode" value="specific" type="radio" id="flushSpecific" onchange="onFlushModeChange()"/>
+    <label for="flushSpecific"><b>Specific</b></label>
+
+    <div id="flushOptions" style="display:none; padding-left: 20px">
+        <input name="flush[full_page]" type="checkbox" id="flushFullPage"/>
+        <label for="flushFullPage">FPC</label><br>
+        <input name="flush[css_js]" type="checkbox" id="flushCssJs"/>
+        <label for="flushCssJs">CSS, JS</label><br>
+        <input name="flush[opcache]" type="checkbox" id="flushOpCache"/>
+        <label for="flushOpCache">OPcache</label><br>
+        <?php if (!$inst->isCloud) { ?>
+            <input name="flush[apc]" type="checkbox" id="flushApc"/>
+            <label for="flushApc">APC</label><br>
+            <input name="flush[byteApc]" type="checkbox" id="flushByteApc"/>
+            <label for="flushByteApc">Byte APC</label><br>
+            <input name="flush[byteMemcache]" type="checkbox" id="flushByteMemcache"/>
+            <label for="flushByteMemcache">Byte Memcache</label><br>
+        <?php } ?>
+        <input name="flush[static_content]" type="checkbox"
+               id="flushStaticContent" <?= !$staticContentEnabled ? 'disabled="disabled"' : '' ?>/>
+        <label for="flushStaticContent" <?= !$staticContentEnabled ? 'style="color: gray"' : '' ?>>Static
+            content</label><br>
+        <input name="flush[di]" type="checkbox" id="flushDi" <?= !$diEnabled ? 'disabled="disabled"' : '' ?>/>
+        <label for="flushDi" <?= !$diEnabled ? 'style="color: gray"' : '' ?>>DI</label><br>
+    </div>
+</div>
+<br>
+<button style="min-width: 80px" onclick="inst.flushCache(getInputData('flushCacheForm'))">Flush</button>
+<div id="response" style="margin-top: 10px"></div>

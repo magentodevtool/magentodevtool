@@ -1,0 +1,25 @@
+<div style="color:#e88314; font-weight: bold;">
+    <table>
+        <tr>
+            <td><img src="/app/skin/icon/notice.png" style="padding: 2px 4px 0 0; margin-bottom: -2px"/></td>
+            <td><?= html2text($message) ?></td>
+        </tr>
+        <?php if (isset($details)) { ?>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <span style="font-weight: normal">
+                        <?php foreach ($details as $file => $detail): ?>
+                            <?php if (is_int($file)) { ?>
+                                <?= html2text($detail) ?></br>
+                            <?php } else { ?>
+                                <?= html2text($file) . " - <b>" . html2text($detail) . "</b>" ?></br>
+                            <?php } ?>
+                        <?php endforeach; ?>
+                    </span>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>
+<br>

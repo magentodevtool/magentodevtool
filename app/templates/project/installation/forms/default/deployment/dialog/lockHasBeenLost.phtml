@@ -1,0 +1,8 @@
+<div>
+    <span class="action-label"></span><br/>
+    <span class="error">Deployment Lock has been lost</span><br/>
+    <button onclick="deployment.action('lock/recapture')">Recapture the lock</button>
+</div>
+<script>
+    $last('.action-label').innerHTML = deployment.getLastActionLabel();
+</script>

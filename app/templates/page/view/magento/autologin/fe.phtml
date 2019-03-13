@@ -1,0 +1,47 @@
+<?php
+if (!$inst = \Projects::getInstallation($_GET['source'], $_GET['project'], $_GET['name'])) {
+    echo "Installation not found";
+    return;
+}
+?>
+
+Auto log in to <?= html2text($_GET['project']) ?> / <?= html2text($_GET['name']) ?> front-end..
+
+<script type="application/javascript" src="/app/js/functions.js?v=<?= time() ?>"></script>
+<script type="application/javascript" src="/app/js/installation.js?v=<?= time() ?>"></script>
+
+<br>
+<br>
+Enter an existing customer e-mail:
+<input type="text" id="email" class="wide">
+<button
+        onclick="autoLogIn()"
+>Log in
+</button>
+
+<script>
+    function autoLogIn() {
+        inst = new Installation(<?= $inst->getDataJson() ?>);
+        inst.action('uploadRai', null, function (rai) {
+
+            var raiPath = rai.url.replace(/https?:\/\/[^/]+\//, '');
+            var autoLoginUrl = <?= json_encode($_GET['feUrl']) ?> +raiPath + 'autologin/fe.php';
+
+            var form = createForm({
+                'PWD': rai.PWD,
+                'email': $id('email').value,
+                'fePath': <?= json_encode($_GET['feUrl']) ?>,
+                'urlStores': <?= json_encode($_GET['urlStores']) ?>
+            });
+
+            form.setAttribute('action', autoLoginUrl);
+
+            // hide & add form into DOM because Firefox will not submit it
+            form.style.display = 'none';
+            document.body.appendChild(form);
+
+            form.submit();
+
+        });
+    }
+</script>

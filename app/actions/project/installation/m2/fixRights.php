@@ -1,0 +1,3 @@
+<?php
+
+return $inst->fixRights();

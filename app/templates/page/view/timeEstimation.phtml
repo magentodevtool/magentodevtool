@@ -1,0 +1,88 @@
+<?php
+$teTemplate = <<<timeEstimationTemplate
+# This is default template created for an issue where few hours of coding is required
+#   for other issues all non-implementation hours could be higher or lower
+Transferring 0.1-0.3h
+Platform learning 0h
+Implementation
+	Project learning
+	    Points to learn..
+	Configure dev environment 0.1h
+	Manage required content on dev environment: 0.1h
+	    Points to manage..
+	Coding points (incl. dev testing and making technical solutions):
+		Points to implement.. 2h
+		...
+		Create depin and upgrade
+Code review 0h
+Code review reworks 0h
+Transferring to QA 0.2h
+Assistance to QA 0.1-0.3h
+Internal reworks +30%
+Pass to Beta 0.1h
+External reworks +10%
+Deployments 0.3h
+Overhead +5%
+Missed points +10%
+Already spent 0.5h
+timeEstimationTemplate;
+?>
+<script>
+    function createDetailsLink() {
+        setPersistentVariable('timeEstimation/detailsLink/name', $id('detailsName').value);
+        server.action(
+            'timeEstimation/createDetailsLink',
+            {
+                'name': $id('detailsName').value,
+                'details': consoleTextarea.getValue()
+            },
+            function (link) {
+                $id('teValue').innerHTML =
+                    '<a href="' + link + '"'
+                    + ' style="font-weight: bold; color: black"'
+                    + '>' + $id('teValue').getAttribute('orig-value') + '<a>';
+            },
+            false
+        );
+    }
+
+    function resetTemplate() {
+        consoleTextarea.setValue(<?= json_encode($teTemplate) ?>);
+    }
+
+    function mergeTe() {
+        setPersistentVariable('timeEstimation/merge/childTeId', $id('childTeId').value);
+        server.action(
+            'timeEstimation/merge',
+            {
+                'teText': consoleTextarea.getValue(),
+                'childTeId': $id('childTeId').value
+            },
+            function (mergeHtml) {
+                $id('teResultText').innerHTML = mergeHtml;
+            },
+            false
+        );
+    }
+</script>
+<?= template(
+    'consoleTextarea',
+    [
+        'before' => 'before/timeEstimation',
+        'toolbar' => 'toolbar/timeEstimation'
+    ]
+) ?>
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'timeEstimation/calculate';
+        evalScripts = true;
+        wrapResultInPre = false;
+        var lastValue = getPersistentVariable('lastTimeEstimate');
+        var value = lastValue ? lastValue : <?= json_encode($teTemplate) ?>;
+        setValue(value);
+        setMode('ism/te');
+        beforeSubmit = function () {
+            setPersistentVariable('lastTimeEstimate', getValue());
+        }
+    }
+</script>

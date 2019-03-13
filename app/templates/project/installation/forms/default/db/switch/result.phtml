@@ -1,0 +1,5 @@
+<?php if ($switch !== true) { ?>
+    <span class="error"><b>Switch error:</b><br><?= html2text($switch) ?></span>
+<?php } ?>
+
+<?= $inst->form('flushCaches/result', array('result' => $flushCaches)) ?>

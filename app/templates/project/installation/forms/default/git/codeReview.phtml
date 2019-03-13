@@ -1,0 +1,90 @@
+<?php
+
+if ($inst->isCloud) {
+    $branches = $inst->getLocalInstallation()->git->getRemoteBranches();
+} else {
+    $branches = $inst->git->getRemoteBranches();
+}
+
+?>
+
+<div id="codeReviewForm">
+    <table>
+        <tr>
+            <td style="vertical-align: top">Branches:</td>
+            <td>
+                &nbsp;<?= $inst->form('branchesHighlight', array('targetElements' => '#codeReviewForm label')) ?>
+                <div style="display: none;">
+                    <input type="checkbox" id="selectAll" name="selectAll" onclick="codeReview.selectDeselectAll()">
+                </div>
+                <div id="selectAllBranch" style="padding-left: 15px; display: inline;">
+                    <label for="selectAll" id="selectAllLabel">
+                        select all
+                    </label>
+                </div>
+                <div style="clear: both"></div>
+                <?php foreach ($branches as $branch) {
+                    if (!$inst->git->isDevelopmentBranch($branch['name'])) {
+                        continue;
+                    }
+                    $branchId = "Branch." . $branch['name']; ?>
+                    <div style="float: left">
+                        <input type="checkbox" id="<?= html2text($branchId) ?>"
+                               name=branches[<?= html2text($branch['name']) ?>]
+                        />
+                    </div>
+                    <span id="<?= html2text($branch['name']) ?>">
+                        <label for="<?= html2text($branchId) ?>" id="<?= html2text($branchId . '.label') ?>">
+                            <?= html2text($branch['name']) ?>
+                        </label>
+                    </span>
+                    <div style="clear: both"></div>
+                <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Compare with:</td>
+            <td>
+                <select name="compareWith" style="width: 300px">
+                    <?php foreach ($branches as $branch) { ?>
+                        <option value="<?= html2text($branch['name']) ?>"><?= html2text($branch['name']) ?></option>
+                    <?php } ?>
+                </select>
+            </td>
+        </tr>
+        <?php if (preg_match('~magento~', $inst->project->type)) { ?>
+            <tr>
+                <td>Files filter:</td>
+                <td>
+                    <select name="filter" style="width: 300px">
+                        <option value="all">-</option>
+                        <option value="depins_and_upgrades">Depins & Upgrades</option>
+                        <option value="depins">Depins</option>
+                        <option value="upgrades">Upgrades</option>
+                    </select>
+                </td>
+            </tr>
+        <?php } ?>
+        <tr>
+            <td></td>
+            <td>
+                <div style="display: inline; vertical-align: middle;">
+                    <input id="ignoreSpaces" name="options[ignoreSpaces]" type="checkbox">
+                    <label for="ignoreSpaces">Ignore spaces</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="codeReview.compareBranches();">Compare</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="codeReviewResult"></div>
+
+<script type="application/javascript">
+    codeReview = new CodeReview();
+</script>

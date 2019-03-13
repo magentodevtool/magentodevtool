@@ -1,0 +1,8 @@
+<?= template('project/installation/forms/default/deployment/notes', compact('deployment', 'inst')) ?>
+
+<span>Are you sure you want to deploy following branches to <?= html2text($inst->name) ?>?</span>
+<ul>
+    <?php foreach ($deployment->branchesToDeploy as $branch): ?>
+        <li><?= html2text($branch) ?></li>
+    <?php endforeach; ?>
+</ul>

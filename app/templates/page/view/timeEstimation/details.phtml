@@ -1,0 +1,41 @@
+<style>
+    .cm-s-default .cm-comment {
+        color: rgba(192, 99, 0, 0.73);
+    }
+
+    .cm-s-default .cm-keyword {
+        font-weight: bold;
+    }
+
+    .cm-s-default .cm-atom {
+        color: black;
+        text-decoration: underline;
+    }
+
+    .console-top-menu, #toolbar {
+        display: none;
+    }
+</style>
+<?php
+$connection = \SQLite::getDb('devtool');
+$id = @$_GET['id'];
+$result = $connection->query("
+    select * from TEs where id = " . $connection->quote($_GET['id']) . "
+");
+$te = $result->fetchArray(SQLITE3_ASSOC);
+if (!$te) {
+    echo "<h2>TE not found</h2>";
+    return;
+}
+?>
+<h2><?= html2text($te['name']) ?></h2>
+<?= template('consoleTextarea') ?>
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'timeEstimation/calculate';
+        wrapResultInPre = false;
+        setValue(<?= json_encode($te['details']) ?>);
+        setMode('ism/te');
+        editor.setOption('readOnly', true);
+    }
+</script>

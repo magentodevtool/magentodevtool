@@ -1,0 +1,45 @@
+<?php
+/** @var \Project\Installation $inst */
+
+$user = posix_getpwuid(getmyuid());
+
+$services = array_keys($inst->webServer->getConfig()->getServices());
+if (isset($nameFilter)) {
+    $services = array_filter($services, function ($service) use ($nameFilter) {
+        return strpos($service, $nameFilter) !== false;
+    });
+}
+sort($services);
+?>
+<div id="toolbar">
+    <button onclick="consoleTextarea.submit()">&nbsp; Run &nbsp;</button>
+    <div class="inline" style="margin-left: 10px; vertical-align: middle">
+        <label for="dockerService">Docker Compose Service</label>
+        <select name="dockerService" id="dockerService" onchange="onDockerServiceChange()">
+            <option value="">* host *</option>
+            <option value="" disabled>--------</option>
+            <?php
+            foreach ($services as $service) { ?>
+                <?php $isSelected = stripos($service, 'php') === 0 ?>
+                <option
+                        value="<?= html2text($service) ?>"
+                    <?= $isSelected ? 'selected' : '' ?>
+                ><?= html2text($service) ?></option>
+            <?php } ?>
+        </select>
+        <label for="dockerUser" id="dockerUserLabel">User</label>
+        <select name="dockerUser" id="dockerUser">
+            <option value="<?= $user['uid'] ?>"><?= $user['name'] ?></option>
+            <option value="" disabled>--------</option>
+            <option value="">* default *</option>
+            <option value="0">* root *</option>
+        </select>
+    </div>
+</div>
+
+<script>
+    onDockerServiceChange = function () {
+        showHide('#dockerUser, #dockerUserLabel', $id('dockerService').value !== '');
+    };
+    onDockerServiceChange();
+</script>

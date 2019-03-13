@@ -1,0 +1,12 @@
+<script type="application/javascript">
+    inst.popupTemplate(
+        'deployment/popup',
+        {"deployment": deployment},
+        function () {
+            deployment.isConfirmed = true;
+            hide($id('deploymentForm'));
+            $id('deploymentProgress').innerHTML = 'Deployment of ' + deployment.branchesToDeploy + ' to ' + inst.name + ' has been started..';
+            deployment.continue();
+        }
+    );
+</script>

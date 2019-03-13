@@ -1,0 +1,29 @@
+{
+  "name": "magento/devtool",
+  "description": "Magento Devtool",
+  "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Magento Devtool",
+      "email": "devtoolproject2019@gmail.com"
+    }
+  ],
+  "minimum-stability": "alpha",
+  "prefer-stable": true,
+  "require": {
+    "symfony/yaml": "^3.0",
+    "docker-php/docker-php": "^1.23"
+  },
+  "config": {
+    "use-include-path": true
+  },
+  "autoload": {
+    "psr-4": {
+      "": "app/models/"
+    }
+  },
+  "require-dev": {
+    "composer/composer": "^1.1"
+  }
+}

@@ -1,0 +1,98 @@
+<?= $inst->form('git/fetch') ?>
+<?php
+
+$tags = $inst->git->getTags();
+$currTags = $inst->git->getCurrentTags();
+
+function getTagHtml($name, $isCurrent, $isLocal)
+{
+    $color = '';
+    if ($isCurrent) {
+        $color = 'green';
+    }
+    if ($isLocal) {
+        $color = 'gray';
+    }
+    $html = '<div style="white-space: nowrap">';
+    $html .= '<span style="color: ' . $color . '; ' . (!$isCurrent ? 'visibility: hidden' : '') . '"><b>*</b> </span>';
+    $html .= "<span id=\"tag_" . html2text($name) . "\">";
+    if ($isCurrent) {
+        $html .= "<span style=\"font-weight: bold; color: $color\">" . html2text($name) . "</span>";
+    } else {
+        $html .= '<a href="#"'
+            . ' onclick="inst.gitCheckoutPopup(\'tag\', ' . var2htmlValue($name) . '); return false;"'
+            . ' style="color:' . $color . '">' . html2text($name) . '</a>';
+    }
+    $html .= "</span>";
+    $html .= "</div>";
+    return $html;
+}
+
+?>
+
+
+<div style="position: fixed; right:20px; top: 100px;">
+    <button onclick="showHide($id('tagCreateForm'))">Create tag..</button>
+</div>
+
+<!-- Tag Create form -->
+<div id="tagCreateForm"
+     style="display: none; position: fixed; right: 20px; margin-top: 2px; border: 1px solid #DADADA; padding: 10px; background-color: white; z-index: 5">
+    <b>Create new tag from master:</b>
+    <table style="padding-left: 20px; padding-right: 40px">
+        <tr>
+            <td>Tag name&nbsp;&nbsp;</td>
+            <td>
+                <input id="tagName" style="width: 300px;"
+                       onkeyup="if (event.keyCode == 13) { if(this.value !='' && $id('tagComment').value == '') $id('tagComment').focus(); else createTag(); }"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Comment&nbsp;&nbsp;</td>
+            <td><input id="tagComment" style="width: 300px;"
+                       onkeyup="if (event.keyCode == 13 && event.ctrlKey) createTag()"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="inst.createTag()">Create</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<table class="list">
+    <tr>
+        <th>
+            <span style="color: green; visibility: hidden"><b>*</b> </span>Tag
+        </th>
+        <th></th>
+        <th>Comment</th>
+        <th>Date</th>
+        <th>Tagger</th>
+    </tr>
+    <?php foreach ($tags as $tag) { ?>
+        <tr>
+            <td><?= getTagHtml($tag['name'], isset($currTags[$tag['name']]), $tag['local']) ?></td>
+            <td style="white-space: nowrap; min-width: 50px">
+                <div class="edit" onclick="inst.editTag(<?= var2htmlValue($tag) ?>, event)"></div>
+                <div class="delete" onclick="inst.deleteTag(<?= var2htmlValue($tag) ?>)"></div>
+            </td>
+            <?php if (isset($tag['tagger'])) { ?>
+                <td>
+                    <?= html2text($tag['comment']) ?>
+                </td>
+                <td style="white-space: nowrap">
+                    <?= html2text($tag['date']) ?>
+                </td>
+                <td style="white-space: nowrap">
+                    <?= html2text($tag['tagger']) ?>
+                </td>
+            <?php } else { ?>
+                <td style="color:#ccc">n/a</td>
+                <td style="color:#ccc">n/a</td>
+                <td style="color:#ccc">n/a</td>
+            <?php } ?>
+        </tr>
+    <?php } ?>
+</table>

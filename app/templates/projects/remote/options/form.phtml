@@ -1,0 +1,44 @@
+<?php
+
+//Get Additional options for projects from vars table, like visibility, positions, e.t.c.
+$options = Projects\Remote::getOptions();
+$list = \Projects\Remote::getSortedList();
+
+?>
+<div id="projects.remote.options.form" style="display: none;">
+    <table class="projects">
+        <?php foreach ($list as $projectName => $project) { ?>
+            <tr>
+                <td>
+                    <input type="checkbox" id="<?= html2text($projectName) ?>"
+                           title="visibility"
+                           name="options[<?= base64_encode($projectName); ?>][visibility]" <?= $options->$projectName->visibility ? 'checked' : ''; ?>>
+                </td>
+                <td>
+                    <input type="text" name="options[<?= base64_encode($projectName) ?>][position]" style="width: 30px;"
+                           title="position"
+                           value="<?= html2text($options->$projectName->position); ?>">
+                </td>
+                <td>
+                    <b><label for="<?= html2text($projectName) ?>"><?= html2text($projectName) ?></label></b>
+                </td>
+            </tr>
+        <?php } ?>
+        <tr>
+            <td>
+                <input type="checkbox"
+                       title="visibility"
+                       name="defaultVisibility" <?= Projects\Remote::getOptionsDefault('visibility') ? 'checked' : ''; ?>>
+            </td>
+            <td>
+                <input type="text" name="defaultPosition" style="width: 30px;"
+                       title="position"
+                       value="<?= html2text(Projects\Remote::getOptionsDefault('position')); ?>">
+            </td>
+            <td>
+                Default values for new project
+            </td>
+        </tr>
+    </table>
+    <button onclick="projects.remote.options.save()">Save</button>
+</div>

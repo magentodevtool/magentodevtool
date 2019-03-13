@@ -1,0 +1,7 @@
+Failed to set write rights to the following files, please fix it manually:
+<ul>
+    <?php foreach ($inst->getFilesToChmod() as $file) { ?>
+        <li><?= html2text($file) ?></li>
+    <?php } ?>
+</ul>
+<?= $inst->getContinueButton() ?>

@@ -1,0 +1,30 @@
+<div>
+    <span style="color:red; font-weight: bold">
+        Warning: You have to fill-in 'workspace' variable in ~/.<?= INSTANCE_NAME ?>/config.json (not projects.json!), see example:
+    </span>
+    <pre style="margin: 0">
+{
+    "workspace": "<?= USER_HOME ?>localhost"
+}
+</pre>
+    <br>
+    After you can use <b>{workspace}</b> and <b>{user}</b> variables in your projects.json, see example:<br>
+    <br>
+    <pre style="margin: 0">
+"Local": {
+    "folder": "<span style="color: green; font-weight: bold">{workspace}</span>/project-name",
+    "domain": "project-name.local",
+    "type": "local"
+},
+"Alpha": {
+    "login": "<span style="color: green; font-weight: bold">{user}</span>",
+    "host": "10.3.16.108",
+    "folder": "/var/www/vhosts/project-name",
+    "domain": "project-name.alpha.company.com",
+    "type": "remote"
+},
+</pre>
+    <br/>
+    Don't add {user} variable to config, it's defined automatically.<br/>
+    <br/>
+</div>

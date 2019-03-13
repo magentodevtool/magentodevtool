@@ -1,0 +1,90 @@
+<?php
+$localInst = $inst->getLocalInstallation();
+echo $localInst->form('git/fetch');
+$alphaName = 'integration';
+$betaName = 'staging';
+$branches = $localInst->git->getRemoteBranches($alphaName, $betaName);
+$currentBranch = $inst->git->getCurrentBranch();
+?>
+<div id="branchForm">
+    <table class="list">
+        <tr>
+            <th style="color: #ccc; font-weight: normal; border-right: 1px solid #ccc; padding-right:3px; text-align: right">
+                ahead
+            </th>
+            <th style="color: #ccc; font-weight: normal; padding-left:3px;">behind</th>
+            <th style="border:0"></th>
+        </tr>
+        <?php foreach ($branches as $branch) { ?>
+            <tr class="branch-line">
+                <td style="text-align:right; padding-right:3px; border-right: 1px solid #ccc; cursor: default">
+                    <?php if (isset($branch['ahead'][$alphaName])) { ?>
+                        <span style="color: <?= count($branch['ahead'][$alphaName]) == 0 ? '#ccc' : 'green' ?>"
+                            <?php if (count($branch['ahead'][$alphaName]) > 0): ?>
+                                title="Use right click for details"
+                                oncontextmenu="inst.popupHtml(<?= var2htmlValue($localInst->form('git/commitsHint',
+                                    array('commits' => $branch['ahead'][$alphaName]))) ?>); return false;"
+                            <?php endif; ?>>
+						<?= count($branch['ahead'][$alphaName]) ?>,
+					</span>
+                    <?php } ?>
+                    <?php if (isset($branch['ahead'][$betaName])) { ?>
+                        <span style="color: <?= count($branch['ahead'][$betaName]) == 0 ? '#ccc' : 'green' ?>"
+                            <?php if (count($branch['ahead'][$betaName]) > 0): ?>
+                                title="Use right click for details"
+                                oncontextmenu="inst.popupHtml(<?= var2htmlValue($localInst->form('git/commitsHint',
+                                    array('commits' => $branch['ahead'][$betaName]))) ?>); return false;"
+                            <?php endif; ?>>
+						<?= count($branch['ahead'][$betaName]) ?>,
+					</span>
+                    <?php } ?>
+                    <span style="color: <?= count($branch['ahead']['master']) == 0 ? '#ccc' : 'green' ?>"
+                        <?php if (count($branch['ahead']['master']) > 0): ?>
+                            title="Use right click for details"
+                            oncontextmenu="inst.popupHtml(<?= var2htmlValue($localInst->form('git/commitsHint',
+                                array('commits' => $branch['ahead']['master']))) ?>); return false;"
+                        <?php endif; ?>>
+					<?= count($branch['ahead']['master']) ?>
+				</span>
+                </td>
+                <td style="padding-left:3px; padding-right: 0; cursor: default">
+				<span style="color: <?= count($branch['behind']['master']) == 0 ? '#ccc' : '#aa0000' ?>"
+                    <?php if (count($branch['behind']['master']) > 0): ?>
+                        title="Use right click for details"
+                        oncontextmenu="inst.popupHtml(<?= var2htmlValue($localInst->form(
+                            'git/commitsHint',
+                            array('commits' => $branch['behind']['master'])
+                        )) ?>); return false;"
+                    <?php endif; ?>>
+					<?= count($branch['behind']['master']) ?>
+				</span>
+                </td>
+                <td style="padding-left: 20px">
+                    <?php if ($branch['name'] === $currentBranch) { ?>
+                        <span style="color: green"><b>*</b> </span>
+                        <span style="font-weight: bold; color: green">
+						<?= html2text($branch['name']) ?>
+					</span>
+                    <?php } else { ?>
+                        <span style="visibility:hidden"><b>*</b> </span>
+                        <a href="#"
+                           onclick="return false;"
+                        >
+                            <?= html2text($branch['name']) ?>
+                        </a>
+                    <?php } ?>
+                    <?php if ($issueLink = Projects::getIssueLink($branch['name'])) { ?>
+                        <a href="<?= html2text($issueLink) ?>">
+                            <img style="padding-left: 5px; padding-right: 5px" src="/app/skin/link.png"/>
+                        </a>
+                    <?php } ?>
+                </td>
+                <td style="padding-right: 10px">
+                </td>
+                <td>
+                    <button disabled="disabled" class="remove" title="Remove"></button>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>

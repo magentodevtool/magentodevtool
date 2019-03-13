@@ -1,0 +1,35 @@
+<div id="dbTablesContainer">
+    <table id="dbTables">
+        <tr>
+            <th>
+                <input type="checkbox" checked="checked"
+                       onclick="updateAll('.dbTableCheckbox', 'checked', this.checked);">
+            </th>
+            <th>Table</th>
+            <th title="Approx. data size to be imported">Data size</th>
+        </tr>
+        <?php foreach ($tablesInfo as $tableName => $tableInfo): ?>
+            <tr>
+                <td style="text-align: center;">
+                    <input type="checkbox" name="tables[<?= html2text($tableName) ?>]" class="dbTableCheckbox"
+                           checked="checked">
+                </td>
+                <td><?= html2text($tableName) ?></td>
+                <td style="width: 100px;">
+                    <?= humanSizeFormat($tableInfo->dataSize) ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+<div>
+    <button id="continueDbTablesButton"
+            onclick="
+                $id('dbTablesContainer').style.display = 'none';
+                dbImport.disableForm();
+                dbImport.applySelectedTables();
+                dbImport.continue();
+            ">
+        Continue
+    </button>
+</div>

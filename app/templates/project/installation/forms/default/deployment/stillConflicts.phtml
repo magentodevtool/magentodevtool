@@ -1,0 +1,7 @@
+<br>
+<span style="color:#d74a00">Following files still are unresolved:</span>
+<?php foreach ($unmergedFiles as $unmergedFile) { ?>
+    <div style="padding-left: 25px"><?= html2text($unmergedFile) ?></div>
+<?php } ?>
+<button onclick="deployment.action('abortMerge', 'abort')">Abort</button>
+<button onclick="deployment.action('commitMerge', 'continue')">Continue</button>

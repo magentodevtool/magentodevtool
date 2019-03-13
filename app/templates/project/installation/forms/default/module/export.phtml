@@ -1,0 +1,58 @@
+<br>
+This export can find module files which are placed in standard locations.<br>
+If you found file/folder which is not copied you can use module/etc/export.txt file to specify additional files/folders.
+<br>
+<br>
+<form method="post" id="moduleExportForm">
+    <table>
+        <tr>
+            <td>
+                Codepool
+            </td>
+            <td>
+                <select name="codePool" id="codePool" class="wide" onchange="moduleExport.updateModulesList();">
+                    <option>community</option>
+                    <option>core</option>
+                    <option>local</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Module
+            </td>
+            <td>
+                <span id="modulesContainer">
+                    <select name="module" class="wide">
+                    </select>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Destination folder
+            </td>
+            <td>
+                <input type="text" name="folder" onkeyup="moduleExport.validateForm();" class="wide"/>
+                <span style="font-size: small;">(pwd from console)</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td>
+                <button id="continueButton" onclick="moduleExport.run(); return false;">Continue</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="moduleExportMessages"></div>
+            </td>
+        </tr>
+    </table>
+
+</form>
+<script>
+    moduleExport = new ModuleExport(<?= json_encode($inst->magento->getModules()) ?>);
+</script>

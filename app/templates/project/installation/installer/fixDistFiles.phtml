@@ -1,0 +1,7 @@
+Failed to copy all dist files, following files should be copied manually:
+<ul>
+    <?php foreach ($inst->getFilesToCopy() as $file) { ?>
+        <li><?= html2text($file) ?></li>
+    <?php } ?>
+</ul>
+<?= $inst->getContinueButton() ?>

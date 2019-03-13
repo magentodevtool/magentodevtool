@@ -1,0 +1,6 @@
+<span>Are you sure you want to switch to <?= html2text($refType) ?> <b><?= html2text($refName) ?></b>?</span><br>
+<input name="refName" type="hidden" value="<?= html2text($refName) ?>"/>
+<?php if ($isFlushCachePossible) { ?>
+    <input name="doFlushCaches" type="checkbox" id="doFlushCaches" checked/>
+    <label for="doFlushCaches">Flush Magento Caches and Apply Updates</label>
+<?php } ?>

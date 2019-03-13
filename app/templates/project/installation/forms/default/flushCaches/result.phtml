@@ -1,0 +1,28 @@
+<?php if ($result === null || $result === false) { ?>
+
+    <span class="error"><b>Flush caches error:</b><br>No description passed for this error</span>
+
+<?php } elseif (is_object($result)) { ?>
+
+    <?php if (count($result->updates)) { ?>
+        <span>Following updates were applied:</span>
+        <table>
+            <?php foreach ($result->updates as $code => $update) : ?>
+                <tr>
+                    <td style="padding-left: 15px">
+                        <?= $code ?>
+                    </td>
+                    <td style="padding-left: 15px">
+                        <?= $update->from ?> -> <?= $update->to ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php } ?>
+
+    <?php if ($result->updatesException !== false) { ?>
+        <span class="error"><b>Exception was caught when apply updates:</b><br></span>
+        <span class="error"><?= html2text($result->updatesException) ?></span>
+    <?php } ?>
+
+<?php } ?>

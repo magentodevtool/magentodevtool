@@ -1,0 +1,43 @@
+<table>
+    <tr>
+        <td class="left-links">
+            <?=
+            template('navigation/links', array(
+                'links' => array(
+                    'more/bashConsole' => array(
+                        'title' => 'Console',
+                        'links' => array(
+                            'more/bashConsole' => 'Bash',
+                            'more/phpConsole' => 'PHP',
+                        ),
+                    ),
+                    'module/export' => array(
+                        'title' => 'Module',
+                        'links' => array(
+                            'module/export' => 'Export',
+                            'module/setup' => 'Setup',
+                        ),
+                    ),
+                    'config/backup' => array(
+                        'title' => 'Config',
+                        'links' => array(
+                            'config/backup' => 'Backup',
+                        ),
+                    ),
+                    'rights' => 'Rights',
+                    'rsync/importMedia' => 'Import Media',
+                    'attributes/import' => 'Import Attributes',
+                    'more/log' => 'Log',
+                    'more/info' => 'Info',
+                    'sanityCheck' => 'Sanity check',
+                    'findFile' => 'Find file',
+                    'scss' => 'SCSS',
+                    'docker' => 'Docker',
+                    'uninstall' => 'Uninstall',
+                )
+            ))
+            ?>
+        </td>
+        <td id="linkContent"></td>
+    </tr>
+</table>

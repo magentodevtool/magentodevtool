@@ -1,0 +1,14 @@
+<?= template('consoleTextarea/before/hotkeys') ?>
+&nbsp;&nbsp;
+<a href="#" onclick="consoleTextarea.onShowTablesClick(); return false" id="showTables">
+    Show tables
+</a>
+
+<script>
+    document.addEventListener("keyup", function (e) {
+        if ($id('showTables') && e.altKey && e.keyCode == 84) { // Alt + T
+            consoleTextarea.onShowTablesClick();
+            return false;
+        }
+    });
+</script>

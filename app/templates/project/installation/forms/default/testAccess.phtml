@@ -1,0 +1,25 @@
+<button
+        style="width: 50px"
+        onclick="
+        testAccess();
+    "
+>Test
+</button> &nbsp;
+<div id="remoteAccess.result"></div>
+
+<script type="application/javascript">
+
+    testAccess = function () {
+
+        var resultDiv = $id('remoteAccess.result');
+
+        inst.action(
+            'getTestAccessHtml',
+            {},
+            function (response) {
+                resultDiv.innerHTML = '<br>' + response;
+            }
+        );
+    }
+
+</script>

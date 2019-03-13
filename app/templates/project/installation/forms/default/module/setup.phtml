@@ -1,0 +1,118 @@
+<script src="app/js/installation/module/setup.js?v=<?= microtime() ?>"></script>
+<script>
+    moduleSetup = new ModuleSetup;
+</script>
+<?php
+
+$setup = $inst->magento->module->setup;
+
+try {
+    $setup->validateModulesInstallation();
+} catch (Exception $e) {
+    $eKey = isset($e->key) ? $e->key : null;
+    ?>
+    <span class="error"><?= html2text($e->getMessage()) ?></span>
+
+    <?php if ($eKey === 'behind') { ?>
+        <button onclick="moduleSetup.pullModulesRepo()">Pull</button>
+    <?php } elseif ($eKey === 'notCloned') { ?>
+        <button onclick="moduleSetup.cloneModulesRepo()">Clone</button>
+    <?php } ?>
+
+    <?php
+    return;
+}
+
+$modules = $availableModules = $setup->getAvailableModules();
+$modulesGrouped = array();
+$structuralErrors = array();
+foreach ($modules as $module) {
+    if (strpos($module->package, '_') !== false) {
+        if (isset($modulesGrouped[$module->package]) && is_object($modulesGrouped[$module->package])) {
+            $structuralErrors[] = 'Module "' . $module->name . '" was skipped due to structural conflict';
+            continue;
+        }
+        $modulesGrouped[$module->package][$module->name] = $module;
+    } else {
+        $modulesGrouped[$module->name] = $module;
+    }
+}
+?>
+
+<?php foreach ($structuralErrors as $structuralError) { ?>
+    <br>
+    <span class="error"><?= html2text($structuralError) ?></span>
+<?php } ?>
+<?= count($structuralErrors) ? '<br><br>' : '' ?>
+
+<div id="module.setup.form"
+     style="display:inline-block; vertical-align: top;"
+>
+    <?php foreach ($modulesGrouped as $package => $modules) { ?>
+        <?php if (is_array($modules)) { ?>
+            <?php
+            $hasValidOne = false;
+            foreach ($modules as $module) {
+                if ($module->valid) {
+                    $hasValidOne = true;
+                    break;
+                }
+            }
+            ?>
+            <div>
+                <input
+                        type="checkbox"
+                        id="<?= html2text($package) ?>"
+                        onchange="moduleSetup.onPackageChange(this)"
+                    <?= !$hasValidOne ? 'disabled="disabled"' : '' ?>
+                />
+                <label
+                        for="<?= html2text($package) ?>"
+                        onselectstart="return false"
+                        style="<?= !$hasValidOne ? 'color: gray' : '' ?>"
+                >
+                    <?= html2text($package) ?>
+                </label>
+            </div>
+            <div style="padding-left: 20px;" id="<?= html2text($package) ?>.modules">
+                <?php foreach ($modules as $module) { ?>
+                    <?= $inst->form('module/setup/module', $module) ?>
+                <?php } ?>
+            </div>
+        <?php } elseif (is_object($modules)) { ?>
+            <?php $module = $modules; ?>
+            <?= $inst->form('module/setup/module', $module) ?>
+        <?php } ?>
+    <?php } ?>
+</div>
+
+<div
+        id="module.setup.dependencies.container"
+        style="display: inline-block; vertical-align: top; margin-left: 150px; position: fixed; visibility: hidden"
+>
+    Dependencies:
+    <div id="module.setup.dependencies"></div>
+</div>
+
+<br/>
+<br/>
+<button
+        style="padding: 1px 13px"
+        onclick="moduleSetup.onSetupClick()"
+>
+    Setup
+</button>
+
+<br/>
+<br/>
+<div
+        id="module.setup.result"
+        style="margin-bottom: 200px"
+></div>
+
+<script>
+    with (moduleSetup) {
+        projectModules = <?= json_encode($inst->magento->getModules()) ?>;
+        modules = <?= json_encode($availableModules) ?>;
+    }
+</script>

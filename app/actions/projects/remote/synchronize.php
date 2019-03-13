@@ -1,0 +1,3 @@
+<?php
+
+\Projects\Remote::pull();

@@ -1,0 +1,63 @@
+<?php
+$localInst = $inst->getLocalInstallation();
+echo $localInst->form('git/fetch');
+$tags = $localInst->git->getTags();
+
+function getTagHtml($name, $isCurrent, $isLocal)
+{
+    $color = '';
+    if ($isCurrent) {
+        $color = 'green';
+    }
+    if ($isLocal) {
+        $color = 'gray';
+    }
+    $html = '<div style="white-space: nowrap">';
+    $html .= '<span style="color: ' . $color . '; ' . (!$isCurrent ? 'visibility: hidden' : '') . '"><b>*</b> </span>';
+    $html .= "<span id=\"tag_" . html2text($name) . "\">";
+    if ($isCurrent) {
+        $html .= "<span style=\"font-weight: bold; color: $color\">" . html2text($name) . "</span>";
+    } else {
+        $html .= '<a href="#" onclick="return false;"'
+            . ' style="color:' . $color . '">' . html2text($name) . '</a>';
+    }
+    $html .= "</span>";
+    $html .= "</div>";
+    return $html;
+}
+
+?>
+
+<table class="list">
+    <tr>
+        <th>
+            <span style="color: green; visibility: hidden"><b>*</b> </span>Tag
+        </th>
+        <th></th>
+        <th>Comment</th>
+        <th>Date</th>
+        <th>Tagger</th>
+    </tr>
+    <?php foreach ($tags as $tag) { ?>
+        <tr>
+            <td><?= getTagHtml($tag['name'], isset($currTags[$tag['name']]), $tag['local']) ?></td>
+            <td style="white-space: nowrap; min-width: 50px">
+            </td>
+            <?php if (isset($tag['tagger'])) { ?>
+                <td>
+                    <?= html2text($tag['comment']) ?>
+                </td>
+                <td style="white-space: nowrap">
+                    <?= html2text($tag['date']) ?>
+                </td>
+                <td style="white-space: nowrap">
+                    <?= html2text($tag['tagger']) ?>
+                </td>
+            <?php } else { ?>
+                <td style="color:#ccc">n/a</td>
+                <td style="color:#ccc">n/a</td>
+                <td style="color:#ccc">n/a</td>
+            <?php } ?>
+        </tr>
+    <?php } ?>
+</table>

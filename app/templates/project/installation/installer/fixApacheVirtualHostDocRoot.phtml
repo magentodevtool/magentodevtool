@@ -1,0 +1,8 @@
+Following Apache virtual hosts are configured for this project:
+<ul>
+    <?php foreach ($inst->webServer->getConfig()->files as $file) { ?>
+        <li><?= html2text($file['name']) ?></li>
+    <?php } ?>
+</ul>
+Please remove one of them.
+<?= $inst->getContinueButton() ?>

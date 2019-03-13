@@ -1,0 +1,14 @@
+<?php if ($error) { ?>
+    <div>
+        populating static content locales..<br>
+        <span class="error"><?= html2text($error) ?></span><br/>
+        <button onclick="deployment.retry()">Try again</button>
+    </div>
+    <?php return; ?>
+<?php } ?>
+<div>
+    populating static content locales.. done for: <?= html2text($populatedLocales) ?>
+</div>
+<script>
+    deployment.continue()
+</script>

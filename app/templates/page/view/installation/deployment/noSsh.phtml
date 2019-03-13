@@ -1,0 +1,158 @@
+<?php
+if (!$inst = \Projects::getInstallation($_GET['source'], $_GET['project'], $_GET['name'])) {
+    echo "Installation not found";
+    return;
+}
+
+if (!Project::isInstAllowed($inst->type)) {
+    echo "Access denied to local installation from centralized devtool";
+    return;
+}
+
+Activity::register($inst->project->name, $inst->name);
+
+$params = json_decode(base64_decode($_GET['params']), true);
+extract($params);
+
+?>
+
+<?php if (!$buildInst = $inst->deployment->getBuildInst()) { ?>
+    <span class="error">
+        "<?= html2text($inst->deployment->getBuildInstName()) ?>" environment not found
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php if (($deploymentType === 'production') && !$deploymentRemoteTag) { ?>
+    <span class="error">
+        "<?= html2text($inst->deployment->getBuildInstName()) ?>" must be on a tag
+    </span>
+    <?php return; ?>
+<?php } ?>
+<?php
+
+$mageInfo = $buildInst->magento->getInfo(true);
+$depinsDiffOutput = trim($buildInst->exec(
+    'if [ -d "app/depins" ]; then git diff --name-status %s..%s app/depins; fi',
+    $params['from'],
+    $params['to']
+));
+$depinsDiff = empty($depinsDiffOutput) ? [] : explode("\n", $depinsDiffOutput);
+$depinsList = [];
+$preDepinsList = [];
+foreach ($depinsDiff as $line) {
+    preg_match('~^([A-Z])\s+(.+)$~', $line, $matches);
+    $mode = $matches[1];
+    $file = $matches[2];
+    if (strpos($file, '"') === 0) {
+        $file = ltrim($file, '"');
+        $file = substr($file, 0, -1);
+        $file = str_replace('\\"', '"', $file);
+    }
+    if ($mode === 'A') {
+        if (preg_match('~\.pre\.txt$~', $file)) {
+            $preDepinsList[] = $file;
+        } else {
+            $depinsList[] = $file;
+        }
+    }
+}
+
+$applyChangesStaging = [
+    shellescapef('git reset --hard %s', "origin/$deploymentRemoteBranch"),
+];
+$applyChangesProduction = array_merge(
+    $mageInfo->version >= '2.2' ? ['git checkout HEAD ./app/etc/config.php'] : [],
+    [shellescapef('git checkout %s', $deploymentRemoteTag)]
+);
+$cleanGeneration = [
+    'git clean -fxd pub/static var/di var/generation var/view_preprocessed -e pub/static/_cache/',
+];
+$cleanGenerationM22 = [
+    'git clean -fxd pub/static generated/metadata generated/code var/view_preprocessed -e pub/static/_cache/',
+];
+$envName = $deploymentType === 'staging' ? 'Beta' : 'Live';
+
+$deploymentCommands = array_merge(
+    [
+        'rm -f deployment.log',
+        "(pwd | grep $envName && echo -e '\\npwd ok\\n' || (echo -e '\\nERROR: Incorrect environment\\n' && exit 1))",
+        'git fetch',
+    ],
+    $deploymentType === 'staging' ? $applyChangesStaging : $applyChangesProduction,
+    $mageInfo->version >= '2.2' ? $cleanGenerationM22 : $cleanGeneration,
+    [
+        'php bin/magento setup:upgrade --keep-generated',
+        "cat deployment.log && echo -e '\\nSuccess.\\n' || if [ $? -ne 0 ]; then echo -e '\\nFAIL!\\n'; fi",
+    ]
+);
+
+$flushCaches = [
+    'php bin/magento cache:flush',
+    'rm -rf pub/static/_cache/merged/* var/cache/*',
+    "echo -e '\\nSuccess.\\n' || if [ $? -ne 0 ]; then echo -e '\\nFAIL!\\n'; fi",
+];
+
+?>
+<br>
+All commands must be executed in the application root.<br>
+<?php if (count($preDepinsList)) { ?>
+    <br>
+    <b>Before deployment</b>
+    <div style="margin-left: 20px">
+        <?php foreach ($preDepinsList as $file) { ?>
+            <br>
+            <?= html2text(preg_replace('~.*app/depins/~', '', $file)) ?>
+            <pre
+                    style="border: 1px solid #bbb; margin: 0"
+            ><?= html2text($buildInst->exec('git show HEAD:%s', $file)) ?></pre>
+        <?php } ?>
+    </div>
+<?php } ?>
+<br>
+<b>Deployment</b>
+<div style="margin-left: 20px">
+    <pre
+            style="border: 1px solid black"
+    ><?= implode(" >> deployment.log 2>&1 && \\\n", $deploymentCommands) ?></pre>
+</div>
+<br>
+<b>Flush caches</b>
+<div style="margin-left: 20px">
+    First of all check and flush server specific caches if such exist e.g. APC, OPcache,
+    eAccelerator then:
+    <pre
+            style="border: 1px solid black"
+    ><?= implode(" >> deployment.log 2>&1 && \\\n", $flushCaches) ?></pre>
+</div>
+<br>
+<b>Restart queue consumers</b><br>
+<div style="margin-left: 20px">
+    Restart all queue consumers (processes like *bin/magento queue:consumers:start*).
+</div>
+<?php if (count($depinsList)) { ?>
+    <br>
+    <b>After deployment</b>
+    <div style="margin-left: 20px">
+        <?php foreach ($depinsList as $file) { ?>
+            <br>
+            <?= html2text(preg_replace('~.*app/depins/~', '', $file)) ?>
+            <pre
+                    style="border: 1px solid #bbb; margin: 0"
+            ><?= html2text($buildInst->exec('git show HEAD:%s', $file)) ?></pre>
+        <?php } ?>
+    </div>
+    <br>
+    <b>Flush caches</b>
+    <div style="margin-left: 20px">
+        First of all check and flush server specific caches if such exist e.g. APC, OPcache,
+        eAccelerator then:
+        <pre
+                style="border: 1px solid black"
+        ><?= implode(" >> deployment.log 2>&1 && \\\n", $flushCaches) ?></pre>
+    </div>
+<?php } ?>
+<br>
+<b>Inform team</b>
+<div style="margin-left: 20px">
+    Please reply when everything is done and <b>attach deployment.log</b> file.
+</div>

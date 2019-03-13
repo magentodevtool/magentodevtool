@@ -1,0 +1,7 @@
+Failed to fix SSL base URLs, fix https:// domains manually:
+<ul>
+    <?php foreach ($inst->getBaseURLsSSL() as $domain) { ?>
+        <li><?= html2text($domain) ?></li>
+    <?php } ?>
+</ul>
+<?= $inst->getContinueButton() ?>

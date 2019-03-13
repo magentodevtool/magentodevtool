@@ -1,0 +1,11 @@
+<?= $inst->form('git/modifications/notices', compact('diff')); ?>
+<?php if (count($diff->diff)) { ?>
+    <div id="git-modifications">
+        <?= $inst->form('git/diff', array('diff' => $diff->diff, 'readOnly' => false)) ?>
+    </div>
+    <script>
+        show('#toolbar');
+    </script>
+<?php } else { ?>
+    No modifications
+<?php } ?>

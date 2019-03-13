@@ -1,0 +1,49 @@
+<?php if ($inst->type === 'local') { ?>
+    <div class="connection-string-container">
+        <div class="connection-string-switcher">
+            <span class="active"">BASH</span>
+        </div>
+        <div style="overflow: hidden">
+        <textarea
+                class="connection-string"
+                type="text"
+                readonly="readonly"
+                rows="1"
+                wrap="off"
+                style="width: 500px"
+        ><?= html2text($inst->getCdString()) ?></textarea>
+        </div>
+    </div>
+<?php } elseif ($inst->type === 'remote') { ?>
+    <div class="connection-string-container">
+        <div class="connection-string-switcher">
+            <span class="active" onclick="connectionString.switch('bash', this)">BASH</span>
+            <span onclick="connectionString.switch('mc', this)">MC</span>
+        </div>
+        <div style="overflow: hidden">
+        <textarea
+                class="connection-string"
+                type="text"
+                readonly="readonly"
+                rows="1"
+                wrap="off"
+        ><?= html2text($inst->getBashConnectionString()) ?></textarea>
+        </div>
+    </div>
+
+    <script>
+        ConnectionString = function () {
+            var me = this;
+            me.bash = <?= json_encode($inst->getBashConnectionString()) ?>;
+            me.mc = <?= json_encode($inst->getMcConnectionString()) ?>;
+            me.switch = function (type, element) {
+                $('.connection-string-container textarea').value = me[type];
+                $$('.connection-string-switcher span').foreach(function (i, span) {
+                    span.className = '';
+                });
+                element.className = "active";
+            }
+        }
+        connectionString = new ConnectionString;
+    </script>
+<?php } ?>

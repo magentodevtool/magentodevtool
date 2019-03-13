@@ -1,0 +1,42 @@
+<br>
+<div style="color: #e67004; font-weight: bold">
+    File search isn't optimized yet so it can increase HDD load significantly, be careful
+</div>
+<br>
+<table id="fileSearchForm">
+    <tr>
+        <td>
+            File rx
+        </td>
+        <td>
+            <input name="file_name_rx" value="" onkeypress="if(event.keyCode===13) inst.findFile()">
+            ==
+            <select name="file_name_rx_cond">
+                <option value="1">true</option>
+                <option value="0">false</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            File content rx
+        </td>
+        <td>
+            <input name="file_content_rx" value="" onkeypress="if(event.keyCode===13) inst.findFile()">
+            ==
+            <select name="file_content_rx_cond">
+                <option value="1">true</option>
+                <option value="0">false</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button onclick="inst.findFile()">Find</button>
+        </td>
+    </tr>
+</table>
+
+<div id="fileSearchResult"></div>
+

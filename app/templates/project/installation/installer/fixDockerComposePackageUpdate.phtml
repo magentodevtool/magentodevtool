@@ -1,0 +1,7 @@
+You shall manually update <?= /** @var \Project\Installation $inst */
+$inst->getDockerPackageName() ?> package:
+<pre>
+    <?= html2text(cmd('cd %s ', $inst->_appRoot) . ' && \\' . PHP_EOL) ?>
+    <strong><?= html2text(cmd('composer update %s', $inst->getDockerPackageName())) ?></strong>
+</pre>
+<?= $inst->getContinueButton() ?>

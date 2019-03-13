@@ -1,0 +1,110 @@
+<script type="text/javascript" src="/app/js/installation.js?v=<?= time() ?>"></script>
+<?php if ($projectsInfo = \Vars::get(null, null, null, "projects/info")): ?>
+    <div style="position: fixed; right:20px; margin-top: -8px;">
+        Checked <b><?= html2text(\getDateAgo($projectsInfo->date)) ?></b> ago,
+        <button onclick="refreshProjectsInfo()">Refresh</button>
+    </div>
+<?php endif; ?>
+
+<div id="projectsInfo"></div>
+
+<?php
+
+$allowedEnvTypes = array('alpha', 'beta', 'live');
+$getFirstEnv = function ($installations, $envName) {
+    foreach ($installations as $name => $inst) {
+        if (!preg_match('~' . preg_quote($envName) . '~i', $name)) {
+            continue;
+        }
+        return $name;
+    }
+    return false;
+};
+
+$projects = array();
+foreach (Projects::getList('remote') as $projectName => $project) {
+
+    if (!preg_match('~magento~', $project->type)) {
+        continue;
+    }
+
+    // find first closest to live installation, e.g. Live01 but not Live02; if no Live then Beta01; no local inst
+    $foundInstName = false;
+    foreach (array_reverse($allowedEnvTypes) as $envName) {
+        if ($foundInstName = $getFirstEnv($project->installations, $envName)) {
+            break;
+        }
+    }
+
+    if ($foundInstName) {
+        $projects[] = array('name' => $projectName, 'remoteInstName' => $foundInstName);
+    }
+}
+?>
+
+<script type="text/javascript">
+
+    var resultDiv = $id('projectsInfo');
+    projects = <?= json_encode($projects) ?>;
+    lastProjectIdx = -1;
+    projectsInfo = {};
+
+    function getProjectsInfo(refresh) {
+        var refresh = typeof refresh !== 'undefined' ? refresh : false;
+        var projectIdx = lastProjectIdx + 1;
+
+        if (!projects[projectIdx]) {
+            onProjectInfoEnd();
+            return;
+        }
+
+        var project = projects[projectIdx];
+
+        resultDiv.innerHTML = '' + (projectIdx + 1) + '/' + Object.keys(projects).length + ', checking ' + project.name + '/' + project.remoteInstName;
+
+        var inst = new Installation({
+                "name": project.remoteInstName,
+                "project": {"name": project.name},
+                "source": 'remote'
+            }
+        );
+
+        inst.action(
+            'mage/getInfo',
+            {'refresh': refresh},
+            function (info) {
+                if (typeof info !== 'string') {
+                    info.installation = project.remoteInstName;
+                    projectsInfo[project.name] = info;
+                } else {
+                    projectsInfo[project.name] = {
+                        'installation': project.remoteInstName,
+                        'error': info
+                    };
+                }
+                lastProjectIdx = projectIdx;
+                getProjectsInfo(refresh);
+            },
+            true
+        );
+    }
+
+    function onProjectInfoEnd() {
+        template(
+            'projects/info',
+            {projectsInfo: projectsInfo},
+            function (html) {
+                resultDiv.innerHTML = html
+            }
+        );
+    }
+
+    function refreshProjectsInfo() {
+        projectsInfo = {};
+        lastProjectIdx = -1;
+        getProjectsInfo(true);
+    }
+
+    getProjectsInfo();
+
+</script>

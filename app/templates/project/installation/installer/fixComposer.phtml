@@ -1,0 +1,5 @@
+Auto "composer install -o" failed, run it manually in the application root:
+<div style="padding-left: 15px">
+    <?= html2text(cmd('cd %s && composer install -o', $inst->_appRoot)) ?>
+</div>
+<?= $inst->getContinueButton() ?>

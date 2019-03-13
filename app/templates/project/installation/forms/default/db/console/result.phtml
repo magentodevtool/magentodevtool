@@ -1,0 +1,40 @@
+<?php if ($error) { ?>
+    <span style="color: #cc0507">
+        <br>
+        <?= nl2br(trim(html2text($error))) ?>
+        <br>
+    </span>
+<?php } ?>
+
+<?php if ($profile) { ?>
+    <div style="color: green">
+
+        <br>
+        Time: <b><?= number_format($time, 6, '.', '') ?></b>;
+        <?php if (!$error) { ?>
+            SQL time: <b><?= number_format($profile->total->duration, 6, '.', '') ?></b>;
+            Overhead time: <?= number_format($time - $profile->total->duration, 6, '.', '') ?>;
+            Queries: <?= $profile->total->query ?>;
+            <?php if (count($profile->details)) { ?>
+                &nbsp;
+                <a href="#" onclick="showHide($id('profileDetails')); return false;">
+                    details..
+                </a>
+            <?php } ?>
+
+            <div id="profileDetails" style="display: none; padding-left: 10px">
+                <table>
+                    <?php foreach ($profile->details as $info) { ?>
+                        <tr>
+                            <td><?= number_format($info->duration, 6, '.', '') ?></td>
+                            <td><?= html2text($info->query) ?></td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+        <?php } ?>
+
+    </div>
+<?php } ?>
+
+<pre><?= $output ?></pre>

@@ -1,0 +1,14 @@
+<?php if ($error) { ?>
+    <div>
+        generating JSON translates..<br>
+        <span class="error"><?= html2text($error) ?></span><br/>
+        <button onclick="deployment.retry()">Try again</button>
+    </div>
+    <?php return; ?>
+<?php } ?>
+<div>
+    generating JSON translates.. done for: <?= html2text($generatedForLocales) ?>
+</div>
+<script>
+    deployment.continue()
+</script>

@@ -1,0 +1,36 @@
+<?php
+$inst->execOld('git remote prune origin');
+if (trim($inst->execOutput) !== '') {
+    echo '<pre>' . html2text($inst->execOutput) . '</pre>';
+}
+?>
+
+<?php if ($remoteBranchesToPrune = $inst->git->getRemoteBranchesToPrune()) { ?>
+    Remote branches with no changes:
+    <ul>
+        <li>
+            <?= implode('</li><li>', array_map('html2text', $remoteBranchesToPrune)) ?>
+        </li>
+    </ul>
+    <button onclick="inst.pruneRemoteBranches(<?= var2htmlValue($remoteBranchesToPrune) ?>)" style="margin-left: 40px">
+        Prune
+    </button>
+<?php } ?>
+
+<div style="height: 15px"></div>
+
+<?php if ($localBranchesToPrune = $inst->git->getLocalBranchesToPrune()) { ?>
+    Local branches which are removed on remote:
+    <ul>
+        <li>
+            <?= implode('</li><li>', array_map('html2text', $localBranchesToPrune)) ?>
+        </li>
+    </ul>
+    <button onclick="inst.pruneLocalBranches(<?= var2htmlValue($localBranchesToPrune) ?>)" style="margin-left: 40px">
+        Prune
+    </button>
+<?php } ?>
+
+<?php if (!$remoteBranchesToPrune && !$localBranchesToPrune) { ?>
+    No branches to prune
+<?php } ?>

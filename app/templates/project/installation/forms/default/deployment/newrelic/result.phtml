@@ -1,0 +1,21 @@
+<?php $error = $exception ? $exception : ($response && $response['error'] ? 'New relic returned error: ' . $response['error'] : false) ?>
+
+<?php if ($error) { ?>
+    <div>
+        sending deployment to new relic..<br>
+        <span style="color:red; white-space: pre;"><?= html2text($error) ?></span><br/>
+        <button onclick="deployment.continue()">Skip</button>
+        <button onclick="deployment.retry()">Try again</button>
+    </div>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$config['enabled']): ?>
+    <div>
+        sending deployment to new relic.. not available
+    </div>
+<?php endif; ?>
+
+<script>
+    deployment.continue()
+</script>

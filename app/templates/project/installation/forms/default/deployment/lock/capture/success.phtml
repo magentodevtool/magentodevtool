@@ -1,0 +1,6 @@
+<script type="application/javascript">
+    $id('deploymentForm').hash = Math.random();
+    deployment.lockHash = <?= json_encode($hash) ?>;
+    deployment.updateLock();
+    deployment.continue();
+</script>

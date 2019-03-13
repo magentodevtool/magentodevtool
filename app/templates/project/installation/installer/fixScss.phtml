@@ -1,0 +1,27 @@
+SCSS compilation failed, make sure following doesn't give errors:<br>
+<div class="commands">
+    <?php foreach ($inst->generation->scss->getThemes() as $theme) { ?>
+        cd <?= html2text($theme) ?> && compass compile scss && cd -<br>
+    <?php } ?>
+</div>
+<div>
+    FYI, make sure compass version >= 1.0.3 (see compass --version). If version is less, see
+    <a href="#" onclick="showCompassUpgradeInstruction(); return false">upgrade instruction..</a>
+</div>
+<div id="compassUpgradeInstruction" style="display: none">
+    Upgrade/install compass 1.0.3
+    <div class="commands">
+        sudo apt-get install ruby-full<br>
+        gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3<br>
+        curl -sSL https://get.rvm.io | sudo bash<br>
+        sudo gem update --system<br>
+        sudo gem install compass<br>
+    </div>
+</div>
+<script>
+    showCompassUpgradeInstruction = function () {
+        new Popup({'html': $id('compassUpgradeInstruction').innerHTML});
+    }
+</script>
+<?= $inst->getContinueButton() ?>
+

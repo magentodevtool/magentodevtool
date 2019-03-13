@@ -1,0 +1,26 @@
+<?php if ($error) { ?>
+    <div>
+        compiling scss..<br>
+        <span class="error"><?= html2text($error) ?></span><br/>
+        <button onclick="deployment.retry()">Try again</button>
+    </div>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$isAvailable) { ?>
+    <div>
+        compiling scss.. not implemented for Magento 2
+    </div>
+<?php } elseif ($nothingToCompile) { ?>
+    <div>
+        compiling scss.. nothing to compile
+    </div>
+<?php } elseif ($nothingToCommit) { ?>
+    <div>
+        compiling scss.. nothing to commit
+    </div>
+<?php } ?>
+
+<script>
+    deployment.continue()
+</script>

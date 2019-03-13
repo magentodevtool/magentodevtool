@@ -1,0 +1,67 @@
+<a href="javascript:addInstallation();">Add installation</a>
+<div>
+    <div id="addInstallationForm" style="display: none; margin-top: 5px">
+        <table class="form">
+            <tr>
+                <td style="min-width: 100px">Name</td>
+                <td><input class="wide" name="name"/></td>
+            </tr>
+            <tr>
+                <td>Project</td>
+                <td>
+                    <select class="wide" name="projectName" onchange="installationProjectChange(this)"
+                            id="installationProject">
+                        <?php foreach (Projects\Local::getList() as $projectName => $null) { ?>
+                            <option><?= html2text($projectName) ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td>
+                    <select class="wide" name="type" onchange="installationTypeChange(this)" id="installationType">
+                        <option value="local">Local</option>
+                        <option value="remote">Remote</option>
+                    </select>
+                </td>
+            </tr>
+            <tbody id="installationRemoteParams" style="display: none">
+            <tr>
+                <td>Login</td>
+                <td>
+                    <input class="wide" name="login" value="{user}"/>
+                    <span style="color: grey">{user} = "<?= html2text(USER) ?>"</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Host</td>
+                <td><input class="wide" name="host"/></td>
+            </tr>
+            </tbody>
+            <tr>
+                <td>Folder</td>
+                <td>
+                    <input class="wide" name="folder" value="{workspace}/"/>
+                    <span style="color: grey">{workspace} = "<?= html2text(Config::getData()->workspace) ?>"</span>
+                </td>
+            </tr>
+            <tbody id="installationProjectType.magento1">
+            <tr>
+                <td>Domain</td>
+                <td><input class="wide" name="domain"/></td>
+            </tr>
+            </tbody>
+            <tr>
+                <td></td>
+                <td>
+                    <button onclick="installationSave()">Save</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="application/javascript">
+    projectsTypes = <?=json_encode(Projects\Local::getAllProjectsTypes())?>;
+    installationProjectChange();
+</script>

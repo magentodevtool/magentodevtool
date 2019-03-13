@@ -1,0 +1,10 @@
+<div style="color:#e88314; font-weight: bold;">
+    <img src="/app/skin/icon/notice.png" style="padding: 2px 4px 0 0; margin-bottom: -2px"/>
+    <?= html2text($message) ?>
+    <?php if (isset($details)) { ?>
+        <br>
+        <span style="font-weight: normal">
+            <?= html2text($details) ?>
+		</span>
+    <?php } ?>
+</div>

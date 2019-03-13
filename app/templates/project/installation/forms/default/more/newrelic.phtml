@@ -1,0 +1,8 @@
+Enter New Relic deployment event description <br>
+<?= template('consoleTextarea') ?>
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'newrelic/sendEvent';
+        setValue(<?= json_encode($inst->vars->get('lastNewRelicMsg')) ?>);
+    }
+</script>

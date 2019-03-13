@@ -1,0 +1,12 @@
+Database with the same name is already used by following installation<?= count($installations) > 1 ? 's' : '' ?>
+</br>
+<b>
+    <ul>
+        <?php foreach ($installations as $installation) { ?>
+            <li>
+                <?= html2text($installation['project']) ?> -> <?= html2text($installation['name']) ?>
+            </li>
+        <?php } ?>
+    </ul>
+</b>
+please enter other database name..

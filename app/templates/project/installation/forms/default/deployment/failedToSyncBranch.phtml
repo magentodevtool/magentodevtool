@@ -1,0 +1,4 @@
+<br>
+<span style="color:#d74a00">Failed to sync branch "<?= html2text($branch) ?>" on your local installation.
+You need to do: <?= html2text(str_replace(' 2>&1', '', $cmd)) ?></span>
+<button onclick="deployment.retry()">Continue</button>

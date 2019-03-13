@@ -1,0 +1,69 @@
+<style>
+    .console-top-menu, #toolbar {
+        display: none;
+    }
+</style>
+<?php
+$connection = \SQLite::getDb('devtool');
+$id = @$_GET['id'];
+$sql = "select * from TEs2 where id = " . $connection->quote($_GET['id']);
+$result = $connection->query($sql);
+$teRow = $result->fetchArray(SQLITE3_ASSOC);
+if (!$teRow) {
+    echo "<h2>TE not found</h2>";
+    return;
+}
+/** @var TimeEstimation $te */
+$te = json_decode($teRow['TE']);
+?>
+
+<h2><?= html2text($teRow['name']) ?></h2>
+
+<?php if ($te->timeLines->{'code review'}->{'max'}) { ?>
+    <div>
+        Code review starts at <?= html2text($te->result->codeReviewStartsRounded) ?>h
+    </div>
+<?php } ?>
+<div>
+    Alpha test starts at <?= html2text($te->result->testingStartsRounded) ?>h
+</div>
+<div>
+    Beta check starts at <?= html2text($te->result->betaCheckStartsRounded) ?>h
+</div>
+<br>
+
+<?php if (count($te->result->warnings)) { ?>
+    <div>
+        <?php foreach ($te->result->warnings as $warning) { ?>
+            <div style="font-weight: bold; color: #F96804">
+                WARNING: <?= html2text($warning) ?>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+
+<?php if (count($te->result->log)) { ?>
+    <a href="#" onclick="showHide('#teDetailsLogs'); return false;">
+        Show logs..
+    </a>
+    <div id="teDetailsLogs" style="display: none; padding-left: 15px">
+        <?php foreach ($te->result->log as $logLine) { ?>
+            <div><?= html2text($logLine) ?></div>
+        <?php } ?>
+    </div>
+<?php } ?>
+<br>
+<br>
+
+<?= template('consoleTextarea') ?>
+<script type="application/javascript">
+    with (consoleTextarea) {
+        action = 'timeEstimation/calculate';
+        wrapResultInPre = false;
+        setValue(<?= json_encode($te->text) ?>);
+        setMode('ism/te');
+        editor.setOption('readOnly', true);
+    }
+</script>
+
+

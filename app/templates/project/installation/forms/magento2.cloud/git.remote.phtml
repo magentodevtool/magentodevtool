@@ -1,0 +1,27 @@
+<?php if (!$localInst = $inst->getLocalInstallation()) { ?>
+    <span class="error">Local installation is required</span>
+    <?php return; ?>
+<?php } ?>
+
+<?php if (!$localInst->checkRepo()) { ?>
+    <span>Cloning repository..</span>
+    <script>
+        inst.action('git/cloneLocalRepo', null, inst.reloadForm);
+    </script>
+    <?php return; ?>
+<?php } ?>
+
+<table>
+    <tr>
+        <td class="left-links">
+            <?= template('navigation/links', [
+                'links' => [
+                    'git/branch' => 'Branches',
+                    'git/codeReview' => 'Code review',
+                    'git/tag' => 'Tags',
+                ]
+            ]) ?>
+        </td>
+        <td id="linkContent"></td>
+    </tr>
+</table>

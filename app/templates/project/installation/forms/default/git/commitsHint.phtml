@@ -1,0 +1,44 @@
+<?php
+
+$commits = array_reverse($vars['commits']);
+
+$issues = array();
+$other = array();
+foreach ($commits as $commit) {
+    if (preg_match('~^([0-9A-Z]+\s*-\s*[0-9]+)~', $commit['comment'], $ms)) {
+        if (isset($issues[$ms[1]])) {
+            $issues[$ms[1]]++;
+        } else {
+            $issues[$ms[1]] = 1;
+        }
+    } else {
+        if (isset($other[$commit['comment']])) {
+            $other[$commit['comment']]++;
+        } else {
+            $other[$commit['comment']] = 1;
+        }
+    }
+}
+
+$hint = '';
+if (count($issues)) {
+    $hint .= "<span>Issues:</span><ul>";
+    foreach ($issues as $issue => $count) {
+        if ($issueLink = Projects::getIssueLink($issue)) {
+            $issue = "<a href=\"" . html2text($issueLink) . "\">$issue</a>";
+        }
+        $hint .= "<li>" . ($count < 10 ? "   " : "") . "$count: $issue</li>";
+    }
+    $hint .= "</ul>";
+}
+if (count($other)) {
+    $hint .= "<span>Other:</span><ul>";
+    foreach ($other as $comment => $count) {
+        $hint .= "<li>" . ($count < 10 ? "   " : "") . "$count: $comment</li>";
+    }
+    $hint .= "</ul>";
+}
+?>
+
+<span><?= count($commits) . " commits:" ?></span></br>
+<span><?= $hint ?></span>

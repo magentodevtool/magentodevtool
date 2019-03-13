@@ -1,0 +1,53 @@
+<?php
+$defaultServerType = $inst->getLastWebServerType();
+$isApacheAvailable = !$inst->isDevtoolInDocker();
+$isNginxPhpFpmAvailable = !($inst->isDevtoolInDocker() || !isNginxInstalled() || !isPhpFpmInstalled() || $inst->project->type === 'magento2');
+?>
+<div id="serverTypeForm">
+    <table class="form">
+        <tr>
+            <td>Web server type</td>
+            <td>
+                <select class="wide" name="serverType" id="installationServerType" required="">
+                    <option value="apache"
+                        <?= !$isApacheAvailable ? 'disabled="disabled"' : '' ?>
+                        <?= $defaultServerType == 'apache' ? 'selected' : '' ?>
+                    >Apache
+                    </option>
+                    <option value="nginx-php-fpm"
+                        <?= !$isNginxPhpFpmAvailable ? 'disabled="disabled"' : '' ?>
+                        <?= $defaultServerType == 'nginx-php-fpm' ? 'selected' : '' ?>
+                    >Nginx + PHP-FPM
+                    </option>
+                    <option value="docker"
+                        <?= $defaultServerType == 'docker' ? 'selected' : '' ?>
+                    >Docker
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="
+                    $id('serverTypeMessages').innerHTML = '';
+                    var result = inst.action('setWebServerType', getInputData('serverTypeForm'), null);
+                    if(result === true){
+                        $id('serverTypeForm').remove();
+                        installer.addMessage('done');
+                        installer.install();
+                    } else {
+                        $id('serverTypeMessages').innerHTML = result;
+                    }
+                    ">Continue
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="serverTypeMessages"></div>
+            </td>
+        </tr>
+    </table>
+</div>

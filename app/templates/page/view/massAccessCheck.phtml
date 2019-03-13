@@ -1,0 +1,96 @@
+<script type="application/javascript" src="/app/js/installation.js?v=<?= time() ?>"></script>
+<button
+        style="width: 50px"
+        onclick="
+        remoteAccessTest = new RemoteAccessTest;
+        remoteAccessTest.start();
+        $id('test.remoteAccess.button.stop').disabled = false;
+    "
+>Start
+</button> &nbsp;
+<button
+        style="width: 50px"
+        onclick="remoteAccessTest.stop = true; this.disabled = true"
+        id="test.remoteAccess.button.stop"
+        disabled
+>Stop
+</button>
+<div id="test.remoteAccess.result"></div>
+
+<?php
+
+$allProjects = array();
+foreach (array('local', 'remote') as $source) {
+    $projects = Projects::getList($source);
+    $allProjects[$source] = $projects;
+}
+
+// filter type=local (aren't allowed on centralized devtool and don't neede the check)
+foreach ($allProjects as $source => $projects) {
+    foreach ($projects as $project) {
+        foreach ($project->installations as $instName => $installation) {
+            if ($installation->type === 'remote') {
+                continue;
+            }
+            unset($project->installations->{$instName});
+        }
+    }
+}
+?>
+
+<script type="application/javascript">
+
+    RemoteAccessTest = function () {
+
+        var me = this;
+        var resultDiv = $id('test.remoteAccess.result');
+        me.allProjects = <?= json_encode($allProjects) ?>;
+        me.queue = [];
+        me.stop = false;
+
+        var currQueueIdx = null;
+
+        me.start = function () {
+            me.allProjects.foreach(function (source, projects) {
+                projects.foreach(function (projectName, project) {
+                    if (typeof project.installations === 'undefined') return;
+                    project.installations.foreach(function (installationName, installation) {
+                        me.queue.push({
+                            "source": source,
+                            "projectName": projectName,
+                            "installationName": installationName
+                        })
+                    });
+                })
+            });
+            me.proceedQueue();
+        }
+
+        me.proceedQueue = function () {
+            if (me.stop) return;
+            currQueueIdx = currQueueIdx === null ? 0 : ++currQueueIdx;
+            if (!me.queue[currQueueIdx]) return;
+            var queueItem = me.queue[currQueueIdx];
+            var inst = new Installation({
+                    "name": queueItem.installationName,
+                    "project": {"name": queueItem.projectName},
+                    "source": queueItem.source
+                }
+            );
+            resultDiv.innerHTML += '<br>Access to ' + html2text(inst.project.name) + ' / ' + html2text(inst.name);
+            inst.action(
+                'getTestAccessHtml',
+                {},
+                function (html) {
+                    resultDiv.innerHTML += '<div style="padding-left:20px">' + html + '</div>';
+                    me.proceedQueue();
+                },
+                false
+            );
+        }
+
+        resultDiv.innerHTML = '';
+
+    }
+
+</script>

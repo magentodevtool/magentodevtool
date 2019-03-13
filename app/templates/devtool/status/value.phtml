@@ -1,0 +1,20 @@
+<?php
+try {
+    $behind = getDevtoolCommitsBehindCount();
+} catch (Exception $exception) {
+}
+?>
+
+<?php if (isset($exception)) { ?>
+    <span style="color: red; white-space: pre"><?= html2text($exception->getMessage()) ?></span>
+    <?php return; ?>
+<?php } ?>
+
+<?php if ($behind) { ?>
+    <span style="color: red">out-of-date for <?php echo html2text($behind) ?> commits</span>
+    <script>
+        $id('devtool.status.container').style.opacity = 1;
+    </script>
+<?php } else { ?>
+    <span style="color: green;">up-to-date</span>
+<?php } ?>

@@ -1,0 +1,42 @@
+<?php
+if (!is_array($depins = $inst->deployment->getDepins())) {
+    echo template(
+        'message/error',
+        ['error' => 'Can\'t check instructions, may be installation is not accessible']
+    );
+    return;
+}
+?>
+
+<?php if (!count($depins)) { ?>
+    No new instructions
+<?php } else { ?>
+    <table class="list">
+        <tr>
+            <th style="width: 50px">File</th>
+            <th>Created at</th>
+        </tr>
+        <?php foreach ($depins as $depin) { ?>
+            <?php $name = $inst->deployment->getDepinName($depin->file) ?>
+            <tr id="title_wrap_<?= html2text($depin->file) ?>">
+                <td style="color:#d74a00; white-space: nowrap">
+                    <a href="#" onclick="inst.showDepin(<?= var2htmlValue($depin->file) ?>); return false;">
+                        <?= html2text($name) ?>
+                    </a>
+                </td>
+                <td>
+                    <span style="color:grey">
+                        <?= html2text($depin->date) ?>
+                    </span>
+                </td>
+            </tr>
+            <tr id="content_wrap_<?= html2text($depin->file) ?>">
+                <td colspan="2" id="<?= html2text($depin->file) ?>" style="display: none">
+                    <pre style="background-color: #e5e5e5"><?= html2text($depin->content) ?></pre>
+                    <button onclick="inst.doneDepin(<?= var2htmlValue($depin->file) ?>)">Done</button>
+                    <br><br>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+<?php } ?>

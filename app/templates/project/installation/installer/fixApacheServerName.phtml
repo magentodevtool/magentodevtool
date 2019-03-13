@@ -1,0 +1,6 @@
+<br>
+Apache ServerName is invalid in "<?= html2text($inst->getApacheVirtualHostFileName()) ?>", make sure:<br>
+1. ServerName is unique (isn't used by other virtual hosts)<br>
+2. ServerName is equal to "<?= html2text($inst->domain) ?>"<br>
+(don't forget to reload apache after changes)<br>
+<?= $inst->getContinueButton() ?>

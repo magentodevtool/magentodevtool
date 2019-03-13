@@ -1,0 +1,13 @@
+<script type="application/javascript" src="/app/js/installation/installer.js?v=<?= time() ?>"></script>
+<div>
+    <br>
+    Seems that installation is not installed properly, at least
+    <b><?= html2text($inst->getFixDescription($inst->getNextFix())) ?></b>
+    must be done
+    <button onclick="this.disabled = true; installer.start()">Install</button>
+    <div id="result"></div>
+</div>
+
+<script type="application/javascript">
+    installer = new Installer();
+</script>

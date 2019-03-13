@@ -1,0 +1,70 @@
+<?php /** @var \TimeEstimation $te */ ?>
+
+<br>
+<?php if (count($te->result->warnings)) { ?>
+    <div>
+        <?php foreach ($te->result->warnings as $warning) { ?>
+            <div style="font-weight: bold; color: #F96804">
+                WARNING: <?= html2text($warning) ?>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
+
+
+<?php if (count($te->result->log)) { ?>
+    <a href="#" onclick="showHide('#teLogs'); return false;">
+        Show logs..
+    </a>
+    <div id="teLogs" style="display: none; padding-left: 15px">
+        <?php foreach ($te->result->log as $logLine) { ?>
+            <div><?= html2text($logLine) ?></div>
+        <?php } ?>
+    </div>
+<?php } ?>
+<br>
+<a href="#" onclick="showHide('#mergeForm'); return false;">Merge with another TE..</a>
+<div id="mergeForm" style="padding: 0 0 0 20px; display: none">
+    Child TE id: <input id="childTeId"/>
+    <script>
+        $id('childTeId').value = getPersistentVariable('timeEstimation/merge/childTeId');
+    </script>
+    <button onclick="mergeTe()">Merge</button>
+</div>
+<br>
+<a href="#" onclick="showHide('#detailsForm'); return false;">Add details link..</a>
+<div id="detailsForm" style="padding: 0 0 0 20px; display: none">
+    Issue title: <input id="detailsName"/>
+    <script>
+        $id('detailsName').value = getPersistentVariable('timeEstimation/detailsLink/name');
+    </script>
+    <button onclick="createDetailsLink()">Add</button>
+</div>
+
+<br>
+<br>
+<?php
+$teTypeAnchor = preg_replace('~\s+~', '_', $te->result->type);
+if (!empty($te->alreadySpent)) {
+    $alreadySpentString = ' incl. ' . round($te->alreadySpent, 1) . 'h already spent';
+} else {
+    $alreadySpentString = '';
+}
+$teValueStr = '~' . $te->result->totals->grandRounded . 'h';
+?>
+<div style="padding: 0 0 50px 20px">
+    <div id="teResultText">
+        <a href="http://company-wiki/Time_Estimation#<?= urlencode($teTypeAnchor) ?>">
+            <?= html2text($te->result->type) ?>
+        </a>:
+        <span
+                id="teValue"
+                orig-value="<?= html2text($teValueStr) ?>"
+        >
+            <?= html2text($teValueStr) ?>
+        </span>
+        <span style="color: gray;"><?= html2text($alreadySpentString) ?></span>
+    </div>
+    <br><b>Risks:</b><br>...
+    <br><br><b>Out of scope:</b><br>...
+</div>

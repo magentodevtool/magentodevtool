@@ -1,0 +1,87 @@
+<?php if (($feeSpace = $inst->spf('getDirSpaceInfo', 'var')['free']) < 4 * 1024 * 1024 * 1024) { ?>
+    <br>
+    <div style="color: red; font-weight: bold; font-size: 18px">
+        Low disk space: only <?= humanSizeFormat($feeSpace) ?> is available
+    </div>
+    <br>
+<?php } ?>
+
+<?php if (!count($backups = $inst->getDbBackups())) { ?>
+    <br>No backups<br>
+<?php } else { ?>
+    <table class="list">
+        <tr>
+            <th>File</th>
+            <th>Date</th>
+            <th>Size</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <?php foreach ($backups as $backup) { ?>
+            <tr>
+                <td style="color:#d74a00; font-weight: bold"><?= preg_replace(
+                        '~^backups/~',
+                        '<span style="color:grey;font-weight:normal">backups/</span>',
+                        html2text($backup['file'])
+                    ) ?></td>
+                <td><?= html2text($backup['date']) ?></td>
+                <td><?= html2text($backup['size']) ?></td>
+                <td>
+                    <?php $isBackupPartial = preg_match('~\.partial\.~', $backup['file']) ?>
+                    <?php if (preg_match('~(local|alpha)~i', $inst->name)) { ?>
+                        <div title="download" class="download-icon"
+                             onclick="inst.downloadBackup(<?= var2htmlValue($backup['file']) ?>)"></div>
+                    <?php } ?>
+                    <div title="get info" class="info-icon"
+                         style="opacity: <?= $isBackupPartial ? 1 : 0.3 ?>"
+                         onclick="inst.getBackupInfo(<?= var2htmlValue($backup['file']) ?>)"></div>
+                    <div title="delete" class="delete"
+                         onclick="inst.removeBackup(<?= var2htmlValue($backup['file']) ?>)"></div>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+<?php } ?>
+
+<br>
+<table>
+    <tr>
+        <td>Single transaction</td>
+        <td><input id="singleTransaction" type="checkbox" checked/></td>
+    </tr>
+    <tr>
+        <td>backups/</td>
+        <td>
+            <input id="backupName" type="text" value="<?= html2text($inst->getDefaultBackupName()) ?>"
+                   style="width: 100%"
+                   onkeyup="event.keyCode == 13 && backup.loadTablesInfo()"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Tables</td>
+        <td>
+            <select class="wide" name="tablesMode" id="tablesMode" onchange="backup.onBackupModeChange(this.value)">
+                <option value="all">All</option>
+                <option value="selected">Selected</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button id="createBackupBtn" onclick="backup.create()">Create</button>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td id="tablesInfo"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td id="backupProgress"></td>
+    </tr>
+</table>
+
+<script type="application/javascript">
+    backup = new Backup;
+</script>

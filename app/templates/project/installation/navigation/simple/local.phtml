@@ -1,0 +1,14 @@
+<?=
+template('navigation/tabs',
+    array(
+        'tabs' => array(
+            'git.local' => 'Git',
+            'more/bashConsole' => 'Bash console',
+            'more/phpConsole' => 'PHP console',
+        )
+    )
+)
+?>
+<script type="application/javascript">
+    inst.tabClick('git.local');
+</script>

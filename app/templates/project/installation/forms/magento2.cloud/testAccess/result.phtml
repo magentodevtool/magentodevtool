@@ -1,0 +1,8 @@
+<?php if ($inst->type === 'remote') { ?>
+    SSH connection: <?= $sshConnection === true ? 'OK' : '<span style="color: red">' . html2text($sshConnection) . '</span>' ?>
+    <br>
+    zdevtool folder: <?= $zDevtoolFolder === true ? 'OK' : '<span style="color: red">' . html2text($zDevtoolFolder) . '</span>' ?>
+    <br>
+<?php } else { ?>
+    project repository: <?= $repository === true ? 'OK' : '<span style="color: red">' . html2text($repository) . '</span>' ?>
+<?php } ?>

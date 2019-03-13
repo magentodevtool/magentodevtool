@@ -1,0 +1,28 @@
+<script type="application/javascript">
+    onFlushModeChange = function () {
+        $id('flushOptions').style.display = $id('flushSpecific').checked ? 'block' : 'none';
+    }
+</script>
+<br>
+<div id="flushCacheForm">
+    <input name="mode" value="all" type="radio" id="flushAll" checked="checked" onchange="onFlushModeChange()"/>
+    <label for="flushAll"><b>All</b> <span style="font-size: 14px">(except images)</span></label>
+    <br>
+    <input name="mode" value="specific" type="radio" id="flushSpecific" onchange="onFlushModeChange()"/>
+    <label for="flushSpecific"><b>Specific</b></label>
+
+    <div id="flushOptions" style="display:none; padding-left: 20px">
+        <input name="flush[storage]" type="checkbox" id="flushStorage"/><label for="flushStorage">Cache
+            Storage</label><br>
+        <input name="flush[cssAndJs]" type="checkbox" id="flushCssAndJs"/><label for="flushCssAndJs">CSS, JS</label><br>
+        <input name="flush[fpc]" type="checkbox" id="flushFpc"/><label for="flushFpc">FPC</label><br>
+        <input name="flush[apc]" type="checkbox" id="flushApc"/><label for="flushApc">APC</label><br>
+        <input name="flush[byteApc]" type="checkbox" id="flushByteApc"/><label for="flushByteApc">Byte APC</label><br>
+        <input name="flush[byteMemcache]" type="checkbox" id="flushByteMemcache"/><label for="flushByteMemcache">Byte
+            Memcache</label><br>
+        <input name="flush[images]" type="checkbox" id="flushImages"/><label for="flushImages">Images</label><br>
+    </div>
+</div>
+<br>
+<button style="min-width: 80px" onclick="inst.flushCache(getInputData('flushCacheForm'))">Flush</button>
+<div id="response" style="margin-top: 10px"></div>

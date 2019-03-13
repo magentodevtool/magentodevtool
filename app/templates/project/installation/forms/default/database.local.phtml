@@ -1,0 +1,24 @@
+<table>
+    <tr>
+        <td class="left-links">
+            <?=
+            template('navigation/links', array(
+                'links' => array(
+                    'db/list' => 'List',
+                    'db/console' => 'Console',
+                    'db/backups' => 'Backups',
+                    'db/credentials' => 'Credentials',
+                    'db/foreignKeys' => 'Foreign keys',
+                    'db/search' => 'Search',
+                    'db/clean' => 'Cleaner',
+                    'db/recreate' => 'Recreate',
+                )
+            ))
+            ?>
+        </td>
+        <td id="linkContent"></td>
+    </tr>
+</table>
+<script type="application/javascript">
+    inst.linkClick('db/console');
+</script>

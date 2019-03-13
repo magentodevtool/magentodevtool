@@ -1,0 +1,64 @@
+<style type="text/css">
+    .ism_sc_name {
+        font-weight: bold;
+    }
+
+    .ism_sc_not_fixed .ism_sc_name {
+        color: #A00000;
+    }
+
+    .ism_sc_fixed .ism_sc_name {
+        color: #006600;
+    }
+
+    .ism_sc_title_how_to_fix {
+        font-weight: bold;
+    }
+
+    .ism_sc_not_fixed .ism_sc_how_to_fix {
+        color: #006600;
+        margin: 0px 0px 0px 20px;
+    }
+
+    .ism_sc_fixed .ism_sc_how_to_fix {
+        color: #000000;
+    }
+
+    .ism_sc_verbose {
+        width: 50px;
+    }
+
+    .ism_sc_title_no_problems {
+        color: #006600;
+        font-weight: bold;
+    }
+
+</style>
+
+<?php $problems = $inst->magento->getProblems(); ?>
+
+<?php if (!is_array($problems)): ?>
+
+    <div class="ism_sc_title_no_problems">
+
+        <?= html2text($problems) ?>
+
+    </div>
+
+<?php else: ?>
+
+    <?php foreach ($problems as $message): ?>
+
+        <div class="<?php echo isset($message->fixed) ? 'ism_sc_fixed' : 'ism_sc_not_fixed' ?>">
+            <span class="ism_sc_name"><?= html2text($message->name) ?></span><br/>
+            <span class="ism_sc_decription"><?= html2text($message->description) ?></span><br/>
+            <span class="ism_sc_title_how_to_fix">How to fix:<br/></span>
+
+            <div class="ism_sc_how_to_fix"><?= nl2br(html2text($message->fix)) ?></div>
+        </div>
+
+        <br/>
+
+    <?php endforeach; ?>
+
+<?php endif; ?>

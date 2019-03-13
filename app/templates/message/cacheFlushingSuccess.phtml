@@ -1,0 +1,22 @@
+<span style="color:green">Caches have been flushed<?= $updates ? ', following updates were applied:' : '' ?></span>
+<?php if ($updates) { ?>
+    <table style="color: green; font-weight: bold">
+        <?php foreach ($updates as $code => $update) { ?>
+            <tr>
+                <td><?= html2text($code) ?></td>
+                <td><?= html2text($update->from) ?> -> <?= html2text($update->to) ?></td>
+            </tr>
+        <?php } ?>
+    </table>
+<?php } ?>
+<?php if ($updatesException !== false) { ?>
+    <?=
+    template(
+        'message/notice',
+        array(
+            'message' => 'Exception was detected during applying updates:',
+            'details' => $updatesException
+        )
+    );
+    ?>
+<?php } ?>

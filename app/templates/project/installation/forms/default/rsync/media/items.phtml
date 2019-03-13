@@ -1,0 +1,58 @@
+<td style="vertical-align: top;">Remote Media Folder</td>
+<td>
+    <div style="max-height: 500px;overflow-y: scroll">
+        <?php if (!count($items)) { ?>
+            <span><?= $remoteInst->name; ?> have no items within media folder</span>
+        <?php } ?>
+        <span>
+            <input type="checkbox" id="checkAll"
+                   onclick="updateAll('input[type=\'checkbox\']', 'checked', this.checked);"/>
+            <label for="checkAll" style="color: grey">CheckAll</label>
+            <br/>
+        </span>
+        <?php foreach ($items as $item) { ?>
+            <?php
+            if (!isset($standardItemsExist) && $item['type'] == 'standard') {
+                $standardItemsExist = true;
+            }
+            if (!isset($nonStandardItemsExist) && $item['type'] != 'standard') {
+                $nonStandardItemsExist = true;
+            }
+            ?>
+            <span class="<?= $item['type'] ?>"
+                  style="display: <?= ($item['type'] != 'standard' && isset($standardItemsExist)) ? 'none;' : '' ?>">
+                <input type="checkbox" id="general_media_folder_<?= $item['listPosition'] ?>"
+                       name="folders[<?= html2text($item['name']) ?>]"
+                    <?= $item['type'] == 'standard' ? 'checked' : '' ?>
+                       value="<?= html2text($item['name']) ?>">
+
+                <label for="general_media_folder_<?= $item['listPosition'] ?>"><?= html2text($item['name']) ?>
+                    <?= $item['name'] == 'catalog/product' ? '<span class="notice">(excl. cache)</span>' : '' ?>
+                    <span id="<?= html2text($item['name']) ?>">
+                        <?= humanSizeFormat($item['size']) . (!$item['isFullSize'] ? '+' : '') ?>
+                    </span>
+                </label>
+
+                <?php if (!$item['isFullSize']) { ?>
+                    <span id="fullSizeFor<?= html2text($item['name']) ?>">
+                    <a href="javascript: void(0)"
+                       onclick="Rsync.getDirFullSize('<?= html2text($item['name']) ?>')">get full size
+                    </a>
+                </span>
+                <?php } ?>
+                <br>
+            </span>
+        <?php } ?>
+    </div>
+    <div style="float: right; margin-top: 1px">
+        <button onclick="Rsync.refreshRemoteMedia();">Refresh</button>
+    </div>
+    <?php if (isset($standardItemsExist) && isset($nonStandardItemsExist)) { ?>
+        <a href="javascript:void(0);"
+           onclick="
+                showHide('#remoteMediaFolder .additional');
+                showHide('#remoteMediaFolder .file');
+                "
+           id="additionalMediaFolderCollapse">show all</a>
+    <?php } ?>
+</td>

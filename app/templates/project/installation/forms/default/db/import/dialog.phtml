@@ -1,0 +1,89 @@
+<div id="importDbForm">
+    <table>
+        <tr>
+            <td style="min-width: 90px">Action</td>
+            <td>
+                <select name="action" class="wide" onchange="dbImport.onActionChange(this)">
+                    <option value="importLocalDump">Import local dump</option>
+                    <option value="importRemoteDump">Import remote dump</option>
+                    <option value="importRemoteDatabase">Import remote database</option>
+                    <option id="importDbAction.fixed" value="alreadyFixed">I already imported data manually</option>
+                </select>
+            </td>
+        </tr>
+        <tbody id="importRemoteDatabaseFields" style="display: none">
+        <tr>
+            <td>Installation</td>
+            <td>
+				<span class="remote-installations-list">
+					<select name="remote" class="wide" style="display:none"></select>
+					<span class="empty-message">
+						- You have no remote installation for this project, please add and press
+					</span>
+					<button onclick="dbImport.refreshRemoteInstallations()">Refresh</button>
+				</span>
+            </td>
+        </tr>
+        </tbody>
+        <tbody id="importRemoteDumpFields" style="display: none">
+        <tr>
+            <td>Installation</td>
+            <td>
+				<span class="remote-installations-list">
+					<select name="remote" class="wide" zero-option="select.."
+                            onchange="dbImport.remoteDumpsInstallationChange(this)"></select>
+					<span class="empty-message">
+						- You have no remote installation for this project, please add and press
+					</span>
+					<button onclick="dbImport.refreshRemoteInstallations()">Refresh</button>
+				</span>
+            </td>
+        </tr>
+        <tr id="remoteDump" style="display: none">
+            <td>Remote dump</td>
+            <td>
+                <span id="remoteDumpsContainer"></span>
+                <button onclick="dbImport.refreshRemoteDumps();">Refresh</button>
+            </td>
+        </tr>
+        </tbody>
+        <tbody id="importLocalDumpFields">
+        <tr>
+            <td>Dump</td>
+            <td>
+                <span id="dbDumpsContainer"></span>
+                <button onclick="dbImport.refreshDbDumps();">Refresh</button>
+            </td>
+        </tr>
+        </tbody>
+        <tr id="tablesMode.container">
+            <td>Tables data</td>
+            <td>
+                <select class="wide" name="tablesMode" id="tablesMode">
+                    <option value="all">All</option>
+                    <option value="selected">Selected</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button onclick="dbImport.start(this)" disabled="disabled" id="continueButton">Start</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="importDbMessages"></div>
+            </td>
+        </tr>
+        <tr style="display: none" id="importDbProgressContainer">
+            <td></td>
+            <td id="importDbProgress">
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="application/javascript">
+    dbImport = new DbImport;
+</script>

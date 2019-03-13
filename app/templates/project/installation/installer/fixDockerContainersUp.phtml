@@ -1,0 +1,73 @@
+<?php
+/** @var Project\Installation $inst */
+$containers = $inst->getDockerRunningContainersWithPorts();
+/** @var \Docker\API\Model\Port $port */
+?>
+<div id="runningContainers">
+    Can't start Docker containers.
+    <ol>
+        <?php if ($containers) { ?>
+            <li>Check that no other running containers occupy the host sockets. Running containers:
+                <table style="border: solid 1px black">
+                    <tr>
+                        <th>Names</th>
+                        <th>Image</th>
+                        <th>Ports</th>
+                    </tr>
+                    <?php foreach ($containers as $container) { ?>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <?php foreach ($container['names'] as $name) { ?>
+                                        <?= html2text($name) ?>
+                                    <?php } ?>
+                                </ul>
+                            </td>
+                            <td><?= html2text($container['image']) ?></td>
+                            <td>
+                                <ul>
+                                    <?php foreach ($container['ports'] as $port) { ?>
+                                        <li><?= html2text($port->getPublicPort()) ?></li>
+                                    <?php } ?>
+                                </ul>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+                <button onclick="
+					$id('dockerResults').innerHTML = '';
+					var result = inst.action('docker/stopConflictingContainers', [], null);
+					if(result === true) {
+					    $id('runningContainers').remove();
+						installer.addMessage('done');
+						installer.install();
+					} else {
+					    $id('dockerResults').innerHTML = result;
+					}
+				">Stop running containers
+                </button>
+                <!--            <button onclick="-->
+                <!--					$id('dockerResults').innerHTML = '';-->
+                <!--					var result = inst.action('docker/dockerStopAll', [], null);-->
+                <!--					if(result === true) {-->
+                <!--					    $id('runningContainers').remove();-->
+                <!--						installer.addMessage('done');-->
+                <!--						installer.install();-->
+                <!--					} else {-->
+                <!--					    $id('dockerResults').innerHTML = result;-->
+                <!--					}-->
+                <!--				">Stop running containers-->
+                <!--            </button>-->
+                <div id="dockerResults"></div>
+            </li>
+        <?php } ?>
+        <li>Go to <strong><?= $inst->getDockerComposeRoot() ?></strong>
+            and execute <strong>docker-compose up -d --no-build</strong>, then
+            check the output.
+            <br>If Docker Compose complains on not built services, run <strong>docker-compose build</strong>
+            <br>docker-compose output:
+            <pre><?= $inst->getDockerComposeServicesText() ?></pre>
+        </li>
+    </ol>
+    <?= $inst->getContinueButton() ?>
+</div>

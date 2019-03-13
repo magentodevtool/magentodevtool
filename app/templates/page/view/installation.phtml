@@ -1,0 +1,108 @@
+<?php if (!Config::getData()->workspace) : ?>
+    <?= template('message/fixWorkspaceVariable') ?>
+<?php endif; ?>
+
+<?php
+$list = \Projects::getList($_GET['source']);
+if (isset($list->{$_GET['project']})) {
+    if ($list->{$_GET['project']}->type !== 'simple' && !isset($list->{$_GET['project']}->repository->docRoot)) {
+        echo "docRoot isn't defined at the projects.json. Please Fix";
+        return;
+    }
+    if (isset($list->{$_GET['project']}->installations->{$_GET['name']}->magentoPath)) {
+        echo "magentoPath isn't used anymore in projects.json, please set docRoot inside projectName->repository->docRoot field";
+        return;
+    }
+}
+?>
+
+<?php
+if (!$inst = \Projects::getInstallation($_GET['source'], $_GET['project'], $_GET['name'])) {
+    echo "Installation not found";
+    return;
+}
+if (!isset($inst->project->type)) {
+    echo "Unknown project type, please fix json";
+    return;
+}
+Projects::validateInstallationName($inst->name);
+
+if (isset($inst->serverType)) {
+    echo template('message/notice', array(
+        'message' => 'Your json contain obsolete field',
+        'details' => 'serverType field was removed, seems that you copied piece of old json, please remove this field'
+    ));
+}
+
+if (!Project::isInstAllowed($inst->type)) {
+    echo "Access denied to local installation from centralized devtool";
+    return;
+}
+
+Activity::register($inst->project->name, $inst->name);
+
+?>
+
+    <table>
+        <tr>
+            <td>
+                <div id="ajax-progress">
+                    <div id="progress-block-1" class="progress-block"></div>
+                    <div id="progress-block-2" class="progress-block"></div>
+                    <div id="progress-block-3" class="progress-block"></div>
+                </div>
+            </td>
+            <td>
+                &nbsp;
+                <a
+                        href="<?= isset($inst->_url) ? $inst->_url : 'javascript: void(0);' ?>"
+                        class="header-title"
+                >
+                    <?= html2text($inst->project->name) ?> / <?= html2text($inst->name) ?>
+                </a>
+
+                <?= template('project/installation/hotLinks', array('inst' => $inst)) ?>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="/" style="color: gray">&#8598; PROJECTS</a>
+                <?= template('project/installation/entrySnippets', compact('inst')) ?>
+            </td>
+        </tr>
+    </table>
+
+    <div class="installations">
+        <?php $installations = Projects::getByName($inst->source, $inst->project->name)->installations; ?>
+        <?php foreach ($installations as $installationName => $installation) { ?>
+            <?php if (!Project::isInstAllowed($installation->type)) {
+                continue;
+            } ?>
+            &nbsp;<span class="<?= ($installationName == $inst->name) ? 'current' : 'other' ?>">
+				<a href="/?view=installation&source=<?= urlencode($inst->source) ?>&project=<?= urlencode($inst->project->name) ?>&name=<?= urlencode($installationName) ?>">
+                    <?= html2text($installationName) ?>
+                </a>
+                <?= template('project/installation/labels', ['inst' => $installation]) ?>
+			</span>
+        <?php } ?>
+    </div>
+
+    <script type="application/javascript" src="/app/js/installation.js?v=<?= time() ?>"></script>
+    <script type="application/javascript" src="/app/js/dialog/db/import.js?v=<?= time() ?>"></script>
+    <script type="application/javascript" src="/app/js/dialog/rsync.js?v=<?= time() ?>"></script>
+    <script type="application/javascript" src="/app/js/dialog/module/export.js?v=<?= time() ?>"></script>
+    <script type="application/javascript">
+        inst = new Installation(<?=$inst->getDataJson()?>);
+    </script>
+
+<?php if (!$inst->Check()) { ?>
+
+    <?= template('project/installation/installer', array('inst' => $inst)) ?>
+
+<?php } else { ?>
+
+    <script type="application/javascript" src="/app/js/installation/<?= $inst->type ?>.js?v=<?= time() ?>"></script>
+    <?= template('project/installation/navigation/' . $inst->project->type . '/' . $inst->type, compact('inst')) ?>
+    <script type="application/javascript">
+        inst.refreshDepinsCount();
+    </script>
+
+<?php } ?>

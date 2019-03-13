@@ -1,0 +1,19 @@
+<?=
+template('navigation/tabs',
+    array(
+        'tabs' => array(
+            'links' => 'Links',
+            'git.remote' => 'Git',
+            'database.remote' => 'Database',
+            'maintenance' => 'Maintenance',
+            'deployment' => 'Deployment',
+            'depins' => 'Instructions',
+            'flushCaches' => 'Flush caches',
+            'more.remote' => 'More..',
+        ),
+    )
+)
+?>
+<script type="application/javascript">
+    inst.tabClick('git.remote');
+</script>

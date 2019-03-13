@@ -1,0 +1,36 @@
+<p>Cherry-pick into: <b><?= $currentBranch ?></b></p>
+<section class="ac-container">
+    <div>
+        <?php $branchesCommits = $inst->git->getCherryPickCommits($currentBranch, $branches); ?>
+        <?php foreach ($branchesCommits as $branchName => $branchCommits) { ?>
+            <input class="accordion" id="<?= $branchName ?>" name="accordion" type="checkbox"/>
+            <label class="accordion" for="<?= $branchName ?>"><?= $branchName ?></label>
+            <article>
+                <table>
+                    <?php foreach ($branchCommits as $branchCommit) { ?>
+                        <?php $commentLines = explode("\n", $branchCommit['comment']) ?>
+                        <?php $commentFirstLine = $commentLines[0] ?>
+                        <?php unset($commentLines[0]) ?>
+                        <?php $commentAdditionalLines = implode("\n", $commentLines) ?>
+                        <tr>
+                            <td style="vertical-align: top">
+                                <input type="checkbox" id="<?= html2text($branchCommit['hash']) ?>"
+                                       name="hashes[<?= html2text($branchCommit['hash']) ?>]"/>
+                            </td>
+                            <td style="vertical-align: top">
+                                <label for="<?= html2text($branchCommit['hash']) ?>">
+                                    <span class="comment"><?= html2text($commentFirstLine) ?></span><br/>
+                                    <span class="comment-additional"><?= html2text($commentAdditionalLines) ?></span>
+                                </label>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </article>
+        <?php } ?>
+    </div>
+</section>
+<input type="checkbox" id="dontCommit" name="dontCommit"/>
+<label for="dontCommit">Don't commit</label>
+<button style="margin: 0 0 0 20px;" onclick="inst.cherryPick();">Continue</button>
+<div id="cherryPickResponse" style="margin-top: 10px"></div>

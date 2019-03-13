@@ -1,0 +1,67 @@
+<?php
+
+$currentBranch = $inst->git->getCurrentBranch();
+$branchExistsOnRemote = false;
+if ($currentBranch) {
+    $remoteBranches = $inst->git->getRemoteBranches();
+    $branchExistsOnRemote = isset($remoteBranches[$currentBranch]);
+}
+
+?>
+
+<span class="unselectable">
+    Current branch:
+    <span style="font-weight: bold">
+        <?= $currentBranch ? html2text($currentBranch) : '(no branch)' ?>
+    </span>
+    <?php if ($currentBranch && !$branchExistsOnRemote) { ?>
+        <span style="color: #dd0000">!removed</span>
+    <?php } ?>
+</span>
+<br/><br/>
+
+<script type="application/javascript">
+    currentBranch = <?=json_encode($currentBranch);?>;
+</script>
+
+<!-- Toolbar -->
+<div style="position: fixed; right:20px; margin-top: -30px; display: none" id="toolbar">
+    <button onclick="updateAll('.file-diff', 'style.display', 'block');">Expand All</button>
+    <button onclick="updateAll('.file-diff', 'style.display', 'none');">Collapse All</button>
+    <?php if ($currentBranch && ($inst->type == 'local')) { ?>
+        <button
+                onclick="$id('commitForm').style.display = $id('commitForm').style.display == 'block' ? 'none' : 'block'"
+                style="font-weight: bold; color: green">Commit All..
+        </button>
+        <script type="application/javascript">
+            refreshCommitBtnColor();
+        </script>
+    <?php } ?>
+    <button onclick="inst.resetAll()" style="color:#bb0000; font-weight: bold">Reset All</button>
+    <div id="modificationsForm">
+        <input id="ignoreSpaces" name="options[ignoreSpaces]" type="checkbox" onchange="inst.loadModifications()">
+        <label for="ignoreSpaces">Ignore spaces</label>
+    </div>
+</div>
+
+<!-- Commit form -->
+<div style="position: fixed; right:20px; margin-top: 25px">
+    <div id="commitForm" style="display: none">
+        <textarea id="commitComment" style="width: 700px" rows="5"
+                  onkeyup="commitCommentKeyup(this, event);"></textarea>
+        <br/>
+        <span style="background-color: white; padding: 6px">
+				<button id="commitBtn" onclick="commit()" style="font-weight: bold;">
+                    Commit into "<?= html2text($currentBranch) ?>"
+                </button>
+				<input type="checkbox" id="doPush" checked="checked"><label for="doPush"> Push</label>
+        </span>
+    </div>
+</div>
+
+<div id="git-modifications-result"></div>
+
+<script type="application/javascript">
+    inst.refreshDepinsCount();
+    inst.loadModifications();
+</script>

@@ -1,0 +1,34 @@
+<script type="application/javascript">
+    deployment.unmergedFiles = <?=json_encode($unmergedFiles)?>;
+</script>
+<br>
+<span style="color:#d74a00;">
+    Conflicts during merge.<br>
+    If you resolve conflict during staging deployment it will appear during Live deployment.<br>
+    Thus at first you need to make sure there are no
+    <a href="#" onclick="showHide($id('conflict_options')); return false;">other options..</a>
+    <ul id="conflict_options" style="display: none">
+        <li>Join changes, very often conflict issues are related or duplicated and should be developed within the same
+            branch
+        </li>
+        <li>Avoid conflict, if issue isn't related to conflict one then likely it's easy to move conflict change to more
+            proper place
+        </li>
+        <li>Postpone deployment of this issue until conflict one go live</li>
+        <li>If your issue is part of big RFC then likely it require separate Alpha and Beta environment</li>
+        <li>If conflict is related to safe changes then they can be duplicated into both branches (preferably through
+            master) e.g. code formatting
+        </li>
+        <li>Alpha branch may contain obsolete (closed) issues, try to re-create it</li>
+        <li>Contact your team leader or senior developer.</li>
+    </ul>
+</span>
+<br>
+<br>
+Files to resolve:
+<?php foreach ($unmergedFiles as $unmergedFile) { ?>
+    <div style="padding-left: 25px"><?= html2text($unmergedFile['file']) ?></div>
+<?php } ?>
+<div style="color:gray"></br>Don't commit, just resolve conflicts</div>
+<button onclick="deployment.action('abortMerge', 'abort')">Abort</button>
+<button onclick="deployment.action('commitMerge', 'continue')">Continue</button>

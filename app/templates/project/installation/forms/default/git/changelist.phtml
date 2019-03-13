@@ -1,0 +1,36 @@
+<?php $headHash = $inst->git->getCurrentHashOld(); ?>
+<?php if ($headHash === false) { ?>
+    <span>Can't get git information. <?= $inst->execOutput ?></span>
+    <?php return; ?>
+<?php } ?>
+
+<br/><b>Git branches:</b><br/>
+<?php
+$remoteBranches = $inst->git->getRemoteBranches();
+$currBranch = $inst->git->getCurrentBranch();
+if ($currBranch) {
+    $currBranchBehindItself = $inst->git->getBranchesDiffLog($currBranch, 'origin/' . $currBranch, false, false);
+    $currBranchColor = count($currBranchBehindItself) ? '#aa0000' : 'green';
+}
+$detachedHEAD = true;
+?>
+<?php foreach ($remoteBranches as $branchName => $branchContent) { ?>
+    <?php if ($branchName === $currBranch) { ?>
+        <?php $detachedHEAD = false; ?>
+        <span style="font-weight: bold; color: <?= $currBranchColor; ?>">* <?= $branchName ?></span>
+    <?php } else { ?>
+        <?= $branchName ?>
+    <?php } ?>
+    <br/>
+<?php } ?>
+<?php if ($detachedHEAD) { ?>
+    <span style="font-weight: bold; color: green">* Detached HEAD (<?= substr($headHash, 0, 8) ?>)</span>
+<?php } ?>
+
+<?php $output = $inst->git->getChangeListHtml(($inst->name !== 'Live') ? $headHash : ''); ?>
+<br/><br/><strong>Changelist:</strong><br/>
+<pre>
+<span id="changelist-content"><?php echo $output ? $output : 'No changes ahead origin/master'; ?></span>
+</pre>
+
+<button id="showAllIssues" onclick="inst.showAllIssues();">Show last 50 commits ..</button>
